@@ -1,0 +1,13 @@
+services:
+  insights:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      NVIDIA_API_KEY: ${NVIDIA_API_KEY:-}
+      NVIDIA_MODEL: ${NVIDIA_MODEL:-moonshotai/kimi-k3}
+      ALLOW_LOCAL_AUTH: "true"
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:-}
+      SUPABASE_JWT_SECRET: ${SUPABASE_JWT_SECRET:-}
+      DATABASE_URL: ${DATABASE_URL:-}

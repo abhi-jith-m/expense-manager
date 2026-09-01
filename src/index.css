@@ -1,0 +1,360 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #f7f6fb;
+  --foreground: #17131f;
+  --card: #ffffff;
+  --card-foreground: #17131f;
+  --card-elevated: #ffffff;
+  --card-hover: #faf9fd;
+  --popover: #ffffff;
+  --popover-foreground: #17131f;
+  --surface-elevated: #ffffff;
+  --surface-secondary: #f0eef7;
+  --primary: #7c3aed;
+  --primary-hover: #8b5cf6;
+  --primary-active: #6d28d9;
+  --primary-foreground: #f7f5fc;
+  --secondary: #f0eef7;
+  --secondary-foreground: #17131f;
+  --muted: #f0eef7;
+  --muted-foreground: #625b6f;
+  --accent: #db2777;
+  --accent-foreground: #17131f;
+  --destructive: #e11d48;
+  --destructive-foreground: #fff7f8;
+  --success: #7c3aed;
+  --success-foreground: #f7f5fc;
+  --warning: #d97706;
+  --warning-foreground: #fff8ed;
+  --info: #2563eb;
+  --income: #7c3aed;
+  --expense: #e11d48;
+  --savings: #0891b2;
+  --investments: #2563eb;
+  --budget: #9333ea;
+  --violet: #7c3aed;
+  --purple: #9333ea;
+  --indigo: #4f46e5;
+  --blue: #2563eb;
+  --cyan: #0891b2;
+  --pink: #db2777;
+  --rose: #e11d48;
+  --border: #e5e1ee;
+  --border-subtle: #ece9f2;
+  --input: #faf9fc;
+  --ring: #7c3aed;
+  --chart-income: #7c3aed;
+  --chart-expense: #e11d48;
+  --chart-savings: #0891b2;
+  --chart-1: #7c3aed;
+  --chart-2: #e11d48;
+  --chart-3: #2563eb;
+  --chart-4: #0891b2;
+  --chart-5: #db2777;
+  --sidebar: #f0eef7;
+  --sidebar-foreground: #17131f;
+  --sidebar-accent: rgb(124 58 237 / 0.1);
+  --sidebar-accent-foreground: #17131f;
+  --sidebar-border: #e5e1ee;
+  --sidebar-muted: #8b8498;
+  --radius: 1.125rem;
+  --shadow-card: 0 1px 2px rgb(23 19 31 / 0.04), 0 10px 24px rgb(23 19 31 / 0.04);
+  /* Z-index: base 0 · sticky header/nav 20 · dropdowns 40 · Vio 60 · dialogs 100 · critical modal 110
+     Vio is hidden while a dialog overlay is open so it never covers confirmations. */
+  --z-nav: 20;
+  --z-dropdown: 40;
+  --z-vio: 60;
+  --z-dialog: 100;
+  --z-modal: 110;
+  --vio-bg: #fbfafd;
+  --vio-surface: #ffffff;
+  --mobile-nav-height: 4.75rem;
+}
+
+.dark {
+  --background: #08070d;
+  --foreground: #f7f5fc;
+  --card: #12101a;
+  --card-foreground: #f7f5fc;
+  --card-elevated: #181522;
+  --card-hover: #1c1928;
+  --popover: #181522;
+  --popover-foreground: #f7f5fc;
+  --surface-elevated: #181522;
+  --surface-secondary: #12101a;
+  --primary: #8b5cf6;
+  --primary-hover: #a78bfa;
+  --primary-active: #7c3aed;
+  --primary-foreground: #f7f5fc;
+  --secondary: #181522;
+  --secondary-foreground: #f7f5fc;
+  --muted: #181522;
+  --muted-foreground: #aaa4b8;
+  --accent: #ec4899;
+  --accent-foreground: #f7f5fc;
+  --destructive: #f43f5e;
+  --destructive-foreground: #f7f5fc;
+  --success: #a78bfa;
+  --success-foreground: #08070d;
+  --warning: #f59e0b;
+  --warning-foreground: #08070d;
+  --info: #3b82f6;
+  --income: #a78bfa;
+  --expense: #fb7185;
+  --savings: #22d3ee;
+  --investments: #60a5fa;
+  --budget: #c084fc;
+  --violet: #8b5cf6;
+  --purple: #a855f7;
+  --indigo: #6366f1;
+  --blue: #3b82f6;
+  --cyan: #22d3ee;
+  --pink: #ec4899;
+  --rose: #f43f5e;
+  --border: #292438;
+  --border-subtle: #211d2d;
+  --input: #191622;
+  --ring: #8b5cf6;
+  --chart-income: #a78bfa;
+  --chart-expense: #fb7185;
+  --chart-savings: #22d3ee;
+  --chart-1: #8b5cf6;
+  --chart-2: #fb7185;
+  --chart-3: #3b82f6;
+  --chart-4: #22d3ee;
+  --chart-5: #ec4899;
+  --sidebar: #0c0a12;
+  --sidebar-foreground: #f7f5fc;
+  --sidebar-accent: rgb(139 92 246 / 0.14);
+  --sidebar-accent-foreground: #f7f5fc;
+  --sidebar-border: #211d2d;
+  --sidebar-muted: #756f83;
+  --shadow-card: none;
+  --vio-bg: #0d0b14;
+  --vio-surface: #12101a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-card-elevated: var(--card-elevated);
+  --color-card-hover: var(--card-hover);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-secondary: var(--surface-secondary);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-income: var(--income);
+  --color-expense: var(--expense);
+  --color-savings: var(--savings);
+  --color-investments: var(--investments);
+  --color-budget: var(--budget);
+  --color-violet: var(--violet);
+  --color-purple: var(--purple);
+  --color-indigo: var(--indigo);
+  --color-blue: var(--blue);
+  --color-cyan: var(--cyan);
+  --color-pink: var(--pink);
+  --color-rose: var(--rose);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-income: var(--chart-income);
+  --color-chart-expense: var(--chart-expense);
+  --color-chart-savings: var(--chart-savings);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-muted: var(--sidebar-muted);
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: var(--radius);
+  --radius-xl: 1.25rem;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "ss01", "cv11", "tnum";
+  }
+
+  #root {
+    min-height: 100svh;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring/45 ring-offset-2 ring-offset-background;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+}
+
+@layer utilities {
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .glass-panel {
+    background-color: color-mix(in srgb, var(--sidebar) 94%, transparent);
+    backdrop-filter: blur(16px);
+  }
+
+  .ambient-violet {
+    background-color: var(--background);
+    background-image: radial-gradient(circle at 85% 8%, rgb(139 92 246 / 0.08), transparent 36%),
+      radial-gradient(circle at 8% 88%, rgb(34 211 238 / 0.04), transparent 32%);
+  }
+
+  .dark .ambient-violet {
+    background-image: radial-gradient(circle at 85% 8%, rgb(139 92 246 / 0.1), transparent 34%),
+      radial-gradient(circle at 10% 90%, rgb(99 102 241 / 0.06), transparent 30%);
+  }
+
+  .vio-workspace {
+    display: flex;
+    width: 0;
+    min-width: 0;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: var(--vio-bg);
+    transition: width 220ms ease;
+  }
+
+  .vio-workspace-open {
+    width: min(420px, 32vw);
+    border-left: 1px solid var(--border);
+  }
+
+  .vio-panel {
+    width: min(420px, 100%);
+    min-width: min(420px, 100%);
+    height: 100%;
+    background: var(--vio-bg);
+  }
+
+  .vio-scrim {
+    display: none;
+  }
+
+  @media (max-width: 1439px) {
+    .vio-workspace {
+      position: absolute;
+      inset: 0 0 0 auto;
+      z-index: var(--z-vio);
+      width: min(420px, 100%);
+      transform: translateX(100%);
+      border-left: 1px solid var(--border);
+      transition: transform 220ms ease;
+    }
+
+    .vio-workspace-open {
+      width: min(420px, 100%);
+      transform: translateX(0);
+    }
+
+    .vio-scrim {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: calc(var(--z-vio) - 1);
+      border: 0;
+      background: rgb(8 7 13 / 0.28);
+      transition: opacity 220ms ease;
+    }
+
+    .vio-scrim-open {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .vio-workspace {
+      inset: 0;
+      width: 100%;
+      height: auto;
+      transform: translateY(110%);
+      border-left: 0;
+      border-top: 1px solid var(--border);
+      border-radius: 1.25rem 1.25rem 0 0;
+      transition: transform 220ms ease;
+    }
+
+    .vio-workspace-open {
+      width: 100%;
+      transform: translateY(0);
+    }
+
+    .vio-panel {
+      width: 100%;
+      min-width: 100%;
+      border-radius: 1.25rem 1.25rem 0 0;
+    }
+
+    .vio-scrim {
+      position: absolute;
+    }
+  }
+
+}
+
+body:has([data-slot='dialog-overlay'][data-state='open']) .vio-workspace,
+body:has([data-slot='dialog-overlay'][data-state='open']) .vio-scrim {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
