@@ -9,12 +9,12 @@ import { MobileMenuProvider } from '@/contexts/mobile-menu-context'
 export function AppShell() {
   return (
     <MobileMenuProvider>
-      <div className="ambient-violet flex min-h-0 min-w-0 overflow-x-clip lg:h-svh lg:overflow-hidden">
+      <div data-app-shell className="ambient-violet flex h-svh min-h-0 min-w-0 overflow-hidden">
         <AppSidebar />
-        <div className="flex min-h-svh min-w-0 flex-1 flex-col lg:min-h-0 lg:h-svh">
+        <div className="flex h-full min-h-0 min-w-0 flex-1 flex-col">
           <AppHeader />
-          <div className="relative flex min-h-0 min-w-0 flex-1">
-            <main className="min-h-0 min-w-0 flex-1 overflow-x-clip overflow-y-auto px-[var(--page-pad)] pb-[calc(var(--mobile-nav-height)+env(safe-area-inset-bottom)+0.75rem)] pt-3 lg:pb-6 lg:pt-4">
+          <div className="relative flex min-h-0 min-w-0 flex-1 overflow-hidden">
+            <main className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-[var(--page-pad)] pb-[calc(var(--mobile-nav-height)+env(safe-area-inset-bottom)+0.75rem)] pt-3 lg:pb-6 lg:pt-4">
               <div className="mx-auto w-full min-w-0 max-w-[1600px]">
                 <Outlet />
               </div>

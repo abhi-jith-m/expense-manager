@@ -250,6 +250,13 @@
     overflow-x: clip;
   }
 
+  html:has([data-app-shell]),
+  body:has([data-app-shell]),
+  body:has([data-app-shell]) #root {
+    height: 100%;
+    overflow: hidden;
+  }
+
   :focus-visible {
     @apply outline-none ring-2 ring-ring/45 ring-offset-2 ring-offset-background;
   }
@@ -356,13 +363,16 @@
     min-width: 0;
     flex-shrink: 0;
     overflow: hidden;
+    visibility: hidden;
     background: var(--vio-bg);
-    transition: width 220ms ease;
+    transition: width 220ms ease, visibility 0s 220ms;
   }
 
   .vio-workspace-open {
     width: min(420px, 32vw);
+    visibility: visible;
     border-left: 1px solid var(--border);
+    transition: width 220ms ease, visibility 0s;
   }
 
   .vio-panel {
@@ -378,23 +388,31 @@
 
   @media (max-width: 1439px) {
     .vio-workspace {
-      position: absolute;
-      inset: 0 0 0 auto;
+      position: fixed;
+      top: calc(var(--header-height) + env(safe-area-inset-top, 0px));
+      right: 0;
+      bottom: 0;
+      left: auto;
       z-index: var(--z-vio);
       width: min(420px, 100%);
       transform: translateX(100%);
       border-left: 1px solid var(--border);
-      transition: transform 220ms ease;
+      visibility: hidden;
+      pointer-events: none;
+      transition: transform 220ms ease, visibility 0s 220ms;
     }
 
     .vio-workspace-open {
       width: min(420px, 100%);
       transform: translateX(0);
+      visibility: visible;
+      pointer-events: auto;
+      transition: transform 220ms ease, visibility 0s;
     }
 
     .vio-scrim {
       display: block;
-      position: absolute;
+      position: fixed;
       inset: 0;
       z-index: calc(var(--z-vio) - 1);
       border: 0;
@@ -414,18 +432,23 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: min(94svh, calc(100dvh - var(--header-height)));
+      height: min(94svh, calc(100dvh - var(--header-height) - env(safe-area-inset-top, 0px)));
       transform: translateY(110%);
       border-left: 0;
       border-top: 1px solid var(--border);
       border-radius: 1.25rem 1.25rem 0 0;
       padding-bottom: env(safe-area-inset-bottom, 0px);
-      transition: transform 220ms ease;
+      visibility: hidden;
+      pointer-events: none;
+      transition: transform 220ms ease, visibility 0s 220ms;
     }
 
     .vio-workspace-open {
       width: 100%;
       transform: translateY(0);
+      visibility: visible;
+      pointer-events: auto;
+      transition: transform 220ms ease, visibility 0s;
     }
 
     .vio-panel {
@@ -435,7 +458,7 @@
     }
 
     .vio-scrim {
-      position: absolute;
+      position: fixed;
     }
   }
 

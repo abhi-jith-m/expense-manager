@@ -16,7 +16,7 @@ export function VioRoot() {
         hidden={!open}
       />
       <aside
-        className={cn('vio-workspace', open ? 'vio-workspace-open' : 'pointer-events-none')}
+        className={cn('vio-workspace', open && 'vio-workspace-open')}
         aria-hidden={!open}
         inert={!open || undefined}
       >
