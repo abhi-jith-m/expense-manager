@@ -11,7 +11,7 @@ export function MobileBottomNav() {
   )
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-[var(--z-nav)] border-t border-border bg-card/92 px-1 pt-1 pb-[max(0.4rem,env(safe-area-inset-bottom))] backdrop-blur-md lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-[var(--z-nav)] border-t border-border bg-card/92 px-1 pt-0.5 pb-[max(0.25rem,env(safe-area-inset-bottom))] backdrop-blur-md lg:hidden">
       <div className="grid grid-cols-5">
         {MOBILE_TABS.map((item) => (
           <NavLink
@@ -20,7 +20,7 @@ export function MobileBottomNav() {
             end={item.to === '/'}
             className={({ isActive }) =>
               cn(
-                'flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-[10px] text-muted-foreground',
+                'flex h-12 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-[10px] text-muted-foreground',
                 isActive && 'text-foreground',
               )
             }
@@ -37,7 +37,7 @@ export function MobileBottomNav() {
           type="button"
           onClick={openMenu}
           className={cn(
-            'flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-[10px] text-muted-foreground',
+            'flex h-12 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-[10px] text-muted-foreground',
             (open || !onPrimary) && 'text-foreground',
           )}
         >

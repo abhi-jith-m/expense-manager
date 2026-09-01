@@ -70,7 +70,7 @@ export function InsightsPage() {
               <TabsTrigger value="insights">Insights</TabsTrigger>
               <TabsTrigger value="ask">Ask Vio</TabsTrigger>
             </TabsList>
-            <TabsContent value="insights" className="space-y-4">
+            <TabsContent value="insights" className="space-y-3">
               {featured.length === 0 ? (
                 <EmptyState
                   icon={Sparkles}

@@ -6,7 +6,7 @@ import { DateRangePicker } from '@/components/shared/date-range-picker'
 import { ChartCard } from '@/components/shared/chart-card'
 import { ResponsiveChart } from '@/components/shared/responsive-chart'
 import { CurrencyDisplay } from '@/components/shared/currency-display'
-import { StatCard } from '@/components/shared/stat-card'
+import { CollapsibleSection } from '@/components/shared/collapsible-section'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/contexts/auth-context'
 import { useAccounts, useCategories, useTransactions } from '@/hooks/use-finance'
@@ -82,35 +82,26 @@ export function AnalyticsPage() {
       <PageHeader title="Analytics" description="Insights are generated only from your transactions in the selected range." />
       <DateRangePicker value={range} onChange={setRange} fullWidth />
 
-      <StatCard compact label="Spending" value={totals.expenses} currency={currency} />
-      <div className="grid grid-cols-2 gap-3">
-        <StatCard compact label="Avg daily" value={totals.expenses / days} currency={currency} />
-        <StatCard
-          compact
-          label="Savings rate"
-          value={totals.savingsRate}
-          currency={currency}
-          formatted={`${totals.savingsRate.toFixed(0)}%`}
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <Card>
-          <CardContent className="space-y-1 px-3 py-2.5">
-            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Largest</p>
-            {largest ? (
-              <CurrencyDisplay amount={largest.amount} currency={currency} className="text-lg font-semibold" />
-            ) : (
-              <p className="text-lg font-semibold">—</p>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="space-y-1 px-3 py-2.5">
+      <Card>
+        <CardContent className="grid grid-cols-2 gap-3">
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Spending</p>
+            <CurrencyDisplay amount={totals.expenses} currency={currency} className="block text-lg font-semibold" />
+          </div>
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Avg daily</p>
+            <CurrencyDisplay amount={totals.expenses / days} currency={currency} className="block text-lg font-semibold" />
+          </div>
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Savings rate</p>
+            <p className="money text-lg font-semibold">{totals.savingsRate.toFixed(0)}%</p>
+          </div>
+          <div>
             <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Top category</p>
             <p className="truncate text-lg font-semibold">{topCategoryId ? categoryMap[topCategoryId] : '—'}</p>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <ChartCard title="Trend" compact>
         <ResponsiveChart>
@@ -143,57 +134,66 @@ export function AnalyticsPage() {
         </CardContent>
       </Card>
 
-      {insights.length ? (
-        <div className="grid gap-2">
-          {insights.map((item) => (
-            <p key={item.id} className="rounded-xl border border-border bg-card px-4 py-3 text-sm">
-              {item.text}
-            </p>
-          ))}
-        </div>
-      ) : (
-        <p className="text-sm text-muted-foreground">Add more history to unlock comparison insights.</p>
-      )}
+      <CollapsibleSection title="Insights">
+        {insights.length ? (
+          <div className="grid gap-2">
+            {insights.map((item) => (
+              <p key={item.id} className="text-sm text-muted-foreground">
+                {item.text}
+              </p>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">Add more history to unlock comparison insights.</p>
+        )}
+        {largest ? (
+          <p className="mt-2 text-sm">
+            Largest <CurrencyDisplay amount={largest.amount} currency={currency} className="inline text-sm" />
+          </p>
+        ) : null}
+      </CollapsibleSection>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <ChartCard title="Weekday spending" compact>
-          <ResponsiveChart>
-            <BarChart data={weekday} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-              <XAxis dataKey="label" tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }} axisLine={false} tickLine={false} />
-              <Tooltip content={<ChartTooltipContent currency={currency} />} />
-              <Bar dataKey="value" fill={CHART.info} radius={6} />
-            </BarChart>
-          </ResponsiveChart>
-        </ChartCard>
-        <ChartCard title="Merchants" compact>
-          <ResponsiveChart>
-            <BarChart data={merchants} layout="vertical" margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-              <XAxis type="number" hide />
-              <YAxis type="category" dataKey="name" width={72} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
-              <Tooltip content={<ChartTooltipContent currency={currency} />} />
-              <Bar dataKey="value" fill={CHART.entertainment} radius={6} />
-            </BarChart>
-          </ResponsiveChart>
-        </ChartCard>
-        <ChartCard title="Payment methods" compact>
-          <ResponsiveChart>
-            <BarChart data={methods} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-              <XAxis dataKey="name" tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }} axisLine={false} tickLine={false} />
-              <Tooltip content={<ChartTooltipContent currency={currency} />} />
-              <Bar dataKey="value" fill={CHART.investments} radius={6} />
-            </BarChart>
-          </ResponsiveChart>
-        </ChartCard>
-        <ChartCard title="Account spending" compact>
-          <ResponsiveChart>
-            <BarChart data={accountSpend} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-              <XAxis dataKey="name" tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }} axisLine={false} tickLine={false} />
-              <Tooltip content={<ChartTooltipContent currency={currency} />} />
-              <Bar dataKey="value" fill={CHART.expenses} radius={6} />
-            </BarChart>
-          </ResponsiveChart>
-        </ChartCard>
-      </div>
+      <CollapsibleSection title="Detailed analysis">
+        <div className="grid gap-3 lg:grid-cols-2">
+          <ChartCard title="Weekday spending" compact>
+            <ResponsiveChart>
+              <BarChart data={weekday} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                <XAxis dataKey="label" tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }} axisLine={false} tickLine={false} />
+                <Tooltip content={<ChartTooltipContent currency={currency} />} />
+                <Bar dataKey="value" fill={CHART.info} radius={6} />
+              </BarChart>
+            </ResponsiveChart>
+          </ChartCard>
+          <ChartCard title="Merchants" compact>
+            <ResponsiveChart>
+              <BarChart data={merchants} layout="vertical" margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                <XAxis type="number" hide />
+                <YAxis type="category" dataKey="name" width={64} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
+                <Tooltip content={<ChartTooltipContent currency={currency} />} />
+                <Bar dataKey="value" fill={CHART.entertainment} radius={6} />
+              </BarChart>
+            </ResponsiveChart>
+          </ChartCard>
+          <ChartCard title="Payment methods" compact>
+            <ResponsiveChart>
+              <BarChart data={methods} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                <XAxis dataKey="name" tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }} axisLine={false} tickLine={false} />
+                <Tooltip content={<ChartTooltipContent currency={currency} />} />
+                <Bar dataKey="value" fill={CHART.investments} radius={6} />
+              </BarChart>
+            </ResponsiveChart>
+          </ChartCard>
+          <ChartCard title="Account spending" compact>
+            <ResponsiveChart>
+              <BarChart data={accountSpend} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                <XAxis dataKey="name" tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }} axisLine={false} tickLine={false} />
+                <Tooltip content={<ChartTooltipContent currency={currency} />} />
+                <Bar dataKey="value" fill={CHART.expenses} radius={6} />
+              </BarChart>
+            </ResponsiveChart>
+          </ChartCard>
+        </div>
+      </CollapsibleSection>
     </div>
   )
 }

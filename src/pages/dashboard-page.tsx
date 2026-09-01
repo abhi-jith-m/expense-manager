@@ -6,7 +6,6 @@ import { format, eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval } fr
 import { useAuth } from '@/contexts/auth-context'
 import { useAccounts, useBudgets, useCategories, useGoals, useTransactions } from '@/hooks/use-finance'
 import { DateRangePicker } from '@/components/shared/date-range-picker'
-import { StatCard } from '@/components/shared/stat-card'
 import { ChartCard } from '@/components/shared/chart-card'
 import { ResponsiveChart } from '@/components/shared/responsive-chart'
 import { TransactionRow } from '@/components/shared/transaction-row'
@@ -18,13 +17,31 @@ import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { accountBalance, computeTotals, percentChange, remaining, usagePercent } from '@/lib/money'
 import { applyTransactionFilters } from '@/lib/filters'
-import { defaultMonthRange, daysInRange, elapsedDays, previousRange } from '@/lib/dates'
+import { defaultMonthRange, daysInRange, previousRange } from '@/lib/dates'
 import { formatMoney } from '@/lib/currency'
 import { DashboardInsights } from '@/components/insights/dashboard-insights'
-import { VioDashboardInvite } from '@/components/vio/VioDashboardInvite'
 import { ChartTooltipContent } from '@/components/shared/chart-tooltip'
 import { CHART } from '@/lib/palette'
+import { cn } from '@/lib/utils'
 import type { DateRange } from '@/types'
+
+function ChangeHint({
+  value,
+  invert,
+}: {
+  value: number | null
+  invert?: boolean
+}) {
+  if (value === null) return <span className="text-muted-foreground">—</span>
+  const up = value > 0
+  const good = invert ? !up : up
+  return (
+    <span className={cn('text-[11px]', good ? 'text-income' : value === 0 ? 'text-muted-foreground' : 'text-expense')}>
+      {up ? '+' : ''}
+      {value.toFixed(1)}%
+    </span>
+  )
+}
 
 export function DashboardPage() {
   const { user } = useAuth()
@@ -58,8 +75,7 @@ export function DashboardPage() {
   const previousTotals = computeTotals(previous)
   const balance = accounts.reduce((sum, account) => sum + accountBalance(account, transactions), 0)
   const overallBudget = budgets.find((item) => !item.categoryId)
-  const budgetSpent = totals.expenses
-  const budgetRemaining = overallBudget ? remaining(overallBudget.limitAmount, budgetSpent) : 0
+  const budgetRemaining = overallBudget ? remaining(overallBudget.limitAmount, totals.expenses) : 0
 
   const trendData = useMemo(() => {
     const days = daysInRange(range)
@@ -70,14 +86,9 @@ export function DashboardPage() {
           ? eachWeekOfInterval({ start: range.from, end: range.to }, { weekStartsOn: 1 })
           : eachMonthOfInterval({ start: range.from, end: range.to })
     return points.map((point) => {
-      const label = days <= 31 ? format(point, 'MMM d') : days <= 120 ? format(point, 'MMM d') : format(point, 'MMM')
-      const slice = current.filter((tx) => {
-        if (days <= 31) return tx.date === format(point, 'yyyy-MM-dd')
-        return true
-      })
       const scoped =
         days <= 31
-          ? slice
+          ? current.filter((tx) => tx.date === format(point, 'yyyy-MM-dd'))
           : current.filter((tx) => {
               const date = new Date(tx.date)
               if (days <= 120) {
@@ -88,6 +99,7 @@ export function DashboardPage() {
               return date.getMonth() === point.getMonth() && date.getFullYear() === point.getFullYear()
             })
       const computed = computeTotals(scoped)
+      const label = days <= 31 ? format(point, 'd') : days <= 120 ? format(point, 'MMM d') : format(point, 'MMM')
       return { label, expenses: computed.expenses, income: computed.income, savings: computed.savings }
     })
   }, [current, range])
@@ -110,15 +122,14 @@ export function DashboardPage() {
       .sort((a, b) => b.value - a.value)
   }, [current, categoryMap])
 
+  const spendForCategories = categoryData.reduce((sum, item) => sum + item.value, 0)
+
   if (loading) {
     return (
       <div className="page-stack">
-        <Skeleton className="h-16" />
-        <div className="grid grid-cols-2 gap-3">
-          <Skeleton className="h-20" />
-          <Skeleton className="h-20" />
-        </div>
+        <Skeleton className="h-28" />
         <Skeleton className="h-40" />
+        <Skeleton className="h-24" />
       </div>
     )
   }
@@ -139,80 +150,64 @@ export function DashboardPage() {
   }
 
   const firstName = user?.fullName.split(' ')[0] ?? 'there'
+  const incomeChange = percentChange(totals.income, previousTotals.income)
+  const expenseChange = percentChange(totals.expenses, previousTotals.expenses)
+  const savingsChange = percentChange(totals.savings, previousTotals.savings)
 
   return (
     <div className="page-stack">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div className="min-w-0">
-          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Welcome back</p>
-          <h1 className="truncate text-2xl font-medium tracking-tight">{firstName}</h1>
+      <div className="flex items-center gap-2">
+        <h1 className="min-w-0 flex-1 truncate text-xl font-medium tracking-tight">{firstName}</h1>
+        <div className="min-w-0 max-w-[9.5rem] shrink-0 sm:max-w-none">
+          <DateRangePicker value={range} onChange={setRange} />
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
-          <div className="col-span-2 sm:col-span-1">
-            <DateRangePicker value={range} onChange={setRange} fullWidth />
-          </div>
-          <Button onClick={() => navigate('/expenses')}>
-            <Plus className="size-4" />
-            Expense
-          </Button>
-          <Button variant="outline" onClick={() => navigate('/income')}>
-            Income
-          </Button>
-        </div>
+        <Button size="icon" aria-label="Add expense" onClick={() => navigate('/expenses')}>
+          <Plus className="size-4" />
+        </Button>
       </div>
 
       <DashboardInsights range={range} />
 
       {transactions.length === 0 ? (
-        <div className="flex flex-col gap-3 rounded-xl border border-dashed border-border bg-card px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-muted-foreground">No activity yet. Add an expense or import a statement.</p>
-          <Button variant="outline" onClick={() => navigate('/import-export')}>
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-dashed border-border px-3 py-2.5 text-sm">
+          <p className="min-w-0 truncate text-muted-foreground">No activity yet.</p>
+          <Button size="sm" variant="outline" onClick={() => navigate('/import-export')}>
             Import
           </Button>
         </div>
       ) : null}
 
-      <StatCard
-        label="Total balance"
-        value={balance}
-        currency={currency}
-        comparison="across accounts"
-      />
-
-      <div className="grid grid-cols-2 gap-3">
-        <StatCard
-          compact
-          label="Income"
-          value={totals.income}
-          currency={currency}
-          change={percentChange(totals.income, previousTotals.income)}
-          comparison="vs prior"
-        />
-        <StatCard
-          compact
-          label="Expenses"
-          value={totals.expenses}
-          currency={currency}
-          invertTrend
-          change={percentChange(totals.expenses, previousTotals.expenses)}
-          comparison="vs prior"
-        />
-      </div>
-
-      <StatCard
-        compact
-        label="Savings"
-        value={totals.savings}
-        currency={currency}
-        change={percentChange(totals.savings, previousTotals.savings)}
-        comparison="vs prior"
-      />
-
-      <VioDashboardInvite />
+      <Card>
+        <CardContent className="space-y-3">
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Total balance</p>
+            <CurrencyDisplay amount={balance} currency={currency} className="mt-0.5 block text-[1.75rem] font-semibold leading-none tracking-tight" />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="min-w-0">
+              <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Income</p>
+              <CurrencyDisplay amount={totals.income} currency={currency} className="block text-base font-semibold" />
+              <ChangeHint value={incomeChange} />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Expenses</p>
+              <CurrencyDisplay amount={totals.expenses} currency={currency} className="block text-base font-semibold" />
+              <ChangeHint value={expenseChange} invert />
+            </div>
+          </div>
+          <div className="flex items-end justify-between gap-3 border-t border-border pt-2.5">
+            <div className="min-w-0">
+              <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Savings</p>
+              <CurrencyDisplay amount={totals.savings} currency={currency} className="block text-base font-semibold" />
+            </div>
+            <ChangeHint value={savingsChange} />
+          </div>
+        </CardContent>
+      </Card>
 
       <ChartCard title="Spending trend" compact>
         <ResponsiveChart>
-          <AreaChart data={trendData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+          <AreaChart data={trendData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis
               dataKey="label"
@@ -221,14 +216,8 @@ export function DashboardPage() {
               axisLine={false}
               tickLine={false}
             />
-            <YAxis
-              width={36}
-              tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
-              axisLine={false}
-              tickLine={false}
-            />
+            <YAxis width={32} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
             <Tooltip cursor={{ stroke: 'var(--border)' }} content={<ChartTooltipContent currency={currency} />} />
-            <Area type="monotone" dataKey="income" stroke={CHART.income} fill={CHART.income} fillOpacity={0.08} />
             <Area type="monotone" dataKey="expenses" stroke={CHART.expenses} fill={CHART.expenses} fillOpacity={0.14} />
           </AreaChart>
         </ResponsiveChart>
@@ -236,92 +225,97 @@ export function DashboardPage() {
 
       <Card>
         <CardHeader className="flex-row items-center justify-between">
-          <CardTitle>Top categories</CardTitle>
+          <CardTitle>Categories & budgets</CardTitle>
           <Button variant="ghost" size="sm" asChild>
-            <Link to="/analytics">See all</Link>
+            <Link to="/budgets">All</Link>
           </Button>
         </CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent className="space-y-3">
           {categoryData.length === 0 ? (
             <p className="text-sm text-muted-foreground">No expenses in range</p>
           ) : (
-            categoryData.slice(0, 5).map((item) => (
-              <div key={item.id} className="flex min-w-0 items-center gap-3">
-                <span className="size-2.5 shrink-0 rounded-full" style={{ background: item.color ?? CHART.other }} />
-                <p className="min-w-0 flex-1 truncate text-sm">{item.name}</p>
-                <CurrencyDisplay amount={item.value} currency={currency} className="text-sm" />
-              </div>
-            ))
-          )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Budget overview</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {budgets.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No budgets yet.</p>
-          ) : (
-            budgets.slice(0, 4).map((budget) => {
-              const spent = current
-                .filter((tx) => tx.type === 'expense' && (!budget.categoryId || tx.categoryId === budget.categoryId))
-                .reduce((sum, tx) => sum + tx.amount, 0)
-              const percent = usagePercent(spent, budget.limitAmount)
-              const projected = (spent / elapsedDays(range)) * daysInRange(range)
-              const over = percent >= 100
-              const near = !over && percent >= budget.alertThreshold
+            categoryData.slice(0, 4).map((item) => {
+              const percent = spendForCategories ? (item.value / spendForCategories) * 100 : 0
               return (
-                <div key={budget.id} className="space-y-1.5">
-                  <div className="flex min-w-0 items-center justify-between gap-3 text-sm">
-                    <span className="truncate">{budget.name}</span>
-                    <CurrencyDisplay amount={spent} currency={currency} className="text-sm" />
+                <div key={item.id} className="space-y-1">
+                  <div className="flex min-w-0 items-center gap-2 text-sm">
+                    <span className="size-2 shrink-0 rounded-full" style={{ background: item.color ?? CHART.other }} />
+                    <p className="min-w-0 flex-1 truncate">{item.name}</p>
+                    <CurrencyDisplay amount={item.value} currency={currency} className="text-sm" />
+                    <span className="w-8 shrink-0 text-right text-[11px] text-muted-foreground">{percent.toFixed(0)}%</span>
                   </div>
-                  <Progress value={percent} tone={over ? 'danger' : near ? 'warning' : 'default'} />
-                  <p className="text-xs text-muted-foreground">
-                    {percent.toFixed(0)}% · proj. {formatMoney(projected, currency, { compact: true })}
-                  </p>
+                  <Progress value={percent} />
                 </div>
               )
             })
           )}
-          {overallBudget ? (
-            <p className="text-xs text-muted-foreground">
-              Budget left <CurrencyDisplay amount={budgetRemaining} currency={currency} className="inline text-xs" />
-            </p>
+          {budgets.length ? (
+            <div className="space-y-2 border-t border-border pt-2.5">
+              {budgets.slice(0, 3).map((budget) => {
+                const spent = current
+                  .filter((tx) => tx.type === 'expense' && (!budget.categoryId || tx.categoryId === budget.categoryId))
+                  .reduce((sum, tx) => sum + tx.amount, 0)
+                const percent = usagePercent(spent, budget.limitAmount)
+                const over = percent >= 100
+                const near = !over && percent >= budget.alertThreshold
+                return (
+                  <button
+                    key={budget.id}
+                    type="button"
+                    className="w-full space-y-1 text-left"
+                    onClick={() => navigate('/budgets')}
+                  >
+                    <div className="flex min-w-0 items-center justify-between gap-2 text-sm">
+                      <span className="truncate">{budget.name}</span>
+                      <span className="shrink-0 text-xs text-muted-foreground">
+                        {formatMoney(spent, currency, { compact: true })} / {formatMoney(budget.limitAmount, currency, { compact: true })}
+                      </span>
+                    </div>
+                    <Progress value={percent} tone={over ? 'danger' : near ? 'warning' : 'default'} />
+                  </button>
+                )
+              })}
+              {overallBudget ? (
+                <p className="text-[11px] text-muted-foreground">
+                  Left <CurrencyDisplay amount={budgetRemaining} currency={currency} className="inline text-[11px]" />
+                </p>
+              ) : null}
+            </div>
           ) : null}
         </CardContent>
       </Card>
 
-      <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-medium">Recent transactions</h2>
+      <Card>
+        <CardHeader className="flex-row items-center justify-between">
+          <CardTitle>Recent</CardTitle>
           <Button variant="ghost" size="sm" asChild>
-            <Link to="/transactions">All</Link>
+            <Link to="/transactions">View all</Link>
           </Button>
-        </div>
-        {current.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No transactions in this range.</p>
-        ) : (
-          current.slice(0, 6).map((tx) => {
-            const category = tx.categoryId ? categoryMap[tx.categoryId] : undefined
-            return (
-              <TransactionRow
-                key={tx.id}
-                merchant={tx.merchant || tx.description || 'Untitled'}
-                meta={`${category?.name ?? tx.type} · ${tx.date}`}
-                amount={tx.amount}
-                currency={tx.currency}
-                icon={category?.icon}
-                color={category?.color}
-                tone={tx.type === 'income' ? 'income' : tx.type === 'expense' ? 'expense' : 'transfer'}
-                onClick={() => navigate(`/transactions?edit=${tx.id}`)}
-              />
-            )
-          })
-        )}
-      </section>
+        </CardHeader>
+        <CardContent className="divide-y divide-border px-3.5 py-1">
+          {current.length === 0 ? (
+            <p className="py-2 text-sm text-muted-foreground">No transactions in this range.</p>
+          ) : (
+            current.slice(0, 5).map((tx) => {
+              const category = tx.categoryId ? categoryMap[tx.categoryId] : undefined
+              return (
+                <TransactionRow
+                  key={tx.id}
+                  flush
+                  merchant={tx.merchant || tx.description || 'Untitled'}
+                  meta={`${category?.name ?? tx.type} · ${tx.date}`}
+                  amount={tx.amount}
+                  currency={tx.currency}
+                  icon={category?.icon}
+                  color={category?.color}
+                  tone={tx.type === 'income' ? 'income' : tx.type === 'expense' ? 'expense' : 'transfer'}
+                  onClick={() => navigate(`/transactions?edit=${tx.id}`)}
+                />
+              )
+            })
+          )}
+        </CardContent>
+      </Card>
 
       <div className="hidden gap-3 lg:grid lg:grid-cols-2">
         <Card>
@@ -349,7 +343,7 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {goals.slice(0, 3).map((goal) => (
-              <div key={goal.id} className="space-y-1.5">
+              <div key={goal.id} className="space-y-1">
                 <div className="flex justify-between gap-3 text-sm">
                   <span className="truncate">{goal.name}</span>
                   <span>{usagePercent(goal.currentAmount, goal.targetAmount).toFixed(0)}%</span>

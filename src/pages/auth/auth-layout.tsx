@@ -34,12 +34,12 @@ export function AuthLayout({
         </div>
         <p className="relative text-xs text-sidebar-muted">Private by default. Your data stays isolated to your account.</p>
       </div>
-      <div className="flex items-center justify-center px-4 py-10">
+      <div className="flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-md">
-          <p className="mb-8 text-sm font-semibold lg:hidden">Aureum</p>
+          <p className="mb-5 text-sm font-semibold lg:hidden">Aureum</p>
           <h1 className="text-2xl font-medium tracking-tight">{title}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
-          <div className="mt-8">{children}</div>
+          <div className="mt-5">{children}</div>
         </div>
       </div>
     </div>

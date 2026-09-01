@@ -48,7 +48,7 @@ export function BudgetsPage() {
       {(budgets.data ?? []).length === 0 ? (
         <EmptyState icon={WalletCards} title="No budgets" description="Set a monthly limit for a category or your overall spending." action={<Button onClick={() => setOpen(true)}>Create budget</Button>} />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-2 md:grid-cols-2 md:gap-3">
           {(budgets.data ?? []).map((budget) => {
             const spent = (transactions.data ?? [])
               .filter((tx) => tx.type === 'expense' && inRange(tx.date, range) && (!budget.categoryId || tx.categoryId === budget.categoryId))
@@ -60,7 +60,7 @@ export function BudgetsPage() {
             const near = !over && percent >= budget.alertThreshold
             return (
               <Card key={budget.id}>
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-2">
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="font-medium">{budget.name}</p>

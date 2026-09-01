@@ -2,10 +2,12 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from 'next-themes'
 import { toast } from 'sonner'
+import { ChevronRight } from 'lucide-react'
 import { PageHeader } from '@/components/shared/page-header'
+import { CollapsibleSection } from '@/components/shared/collapsible-section'
 import { ConfirmDialog } from '@/components/shared/confirm-dialog'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -42,24 +44,20 @@ export function SettingsPage() {
       <PageHeader title="Settings" description="Appearance, currency, notifications, and account security." />
 
       <Card>
-        <CardHeader>
-          <CardTitle>Profile</CardTitle>
-          <CardDescription>{user.email}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button variant="outline" className="w-full sm:w-auto" onClick={() => navigate('/profile')}>
-            Edit profile
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Appearance</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-1.5">
-            <Label>Theme</Label>
+        <CardContent className="divide-y divide-border p-0">
+          <button
+            type="button"
+            className="flex min-h-12 w-full items-center justify-between gap-3 px-3.5 text-left"
+            onClick={() => navigate('/profile')}
+          >
+            <div className="min-w-0">
+              <p className="text-sm font-medium">Profile</p>
+              <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+            </div>
+            <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+          </button>
+          <div className="flex min-h-12 items-center justify-between gap-3 px-3.5">
+            <Label className="shrink-0">Appearance</Label>
             <Select
               value={user.theme}
               onValueChange={(value) => {
@@ -68,7 +66,7 @@ export function SettingsPage() {
                 void patch({ theme })
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger className="h-10 w-[8.5rem] md:h-10">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -78,19 +76,10 @@ export function SettingsPage() {
               </SelectContent>
             </Select>
           </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Currency</CardTitle>
-          <CardDescription>Amounts are never auto-converted between currencies.</CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4">
-          <div className="space-y-1.5">
-            <Label>Default currency</Label>
+          <div className="flex min-h-12 items-center justify-between gap-3 px-3.5">
+            <Label className="shrink-0">Currency</Label>
             <Select value={user.currency} onValueChange={(value) => void patch({ currency: value })}>
-              <SelectTrigger>
+              <SelectTrigger className="h-10 w-[8.5rem] md:h-10">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -102,10 +91,10 @@ export function SettingsPage() {
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-1.5">
-            <Label>Date format</Label>
+          <div className="flex min-h-12 items-center justify-between gap-3 px-3.5">
+            <Label className="shrink-0">Date format</Label>
             <Select value={user.dateFormat} onValueChange={(value) => void patch({ dateFormat: value })}>
-              <SelectTrigger>
+              <SelectTrigger className="h-10 w-[8.5rem] md:h-10">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -121,10 +110,7 @@ export function SettingsPage() {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Notifications</CardTitle>
-        </CardHeader>
-        <CardContent className="divide-y divide-border">
+        <CardContent className="divide-y divide-border p-0">
           {(
             [
               ['budgetAlerts', 'Budget alerts'],
@@ -133,7 +119,7 @@ export function SettingsPage() {
               ['importExportAlerts', 'Import and export'],
             ] as const
           ).map(([key, label]) => (
-            <div key={key} className="flex min-h-11 items-center justify-between gap-4 py-2 first:pt-0 last:pb-0">
+            <div key={key} className="flex min-h-12 items-center justify-between gap-3 px-3.5">
               <Label htmlFor={key} className="min-w-0 flex-1">
                 {label}
               </Label>
@@ -149,47 +135,38 @@ export function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Security</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="grid gap-2">
-            <Label htmlFor="new-password">New password</Label>
-            <Input
-              id="new-password"
-              type="password"
-              placeholder="New password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
-            <Button
-              className="w-full sm:w-auto"
-              onClick={() =>
-                void client
-                  .updatePassword(password)
-                  .then(() => {
-                    toast.success('Password updated')
-                    setPassword('')
-                  })
-                  .catch((error) => toast.error(toUserMessage(error)))
-              }
-            >
-              Change password
-            </Button>
-          </div>
-          <Button variant="outline" className="w-full" onClick={() => void signOut()}>
-            Log out of this session
+      <CollapsibleSection title="Security">
+        <div className="grid gap-2">
+          <Label htmlFor="new-password">New password</Label>
+          <Input
+            id="new-password"
+            type="password"
+            placeholder="New password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+          <Button
+            className="w-full"
+            onClick={() =>
+              void client
+                .updatePassword(password)
+                .then(() => {
+                  toast.success('Password updated')
+                  setPassword('')
+                })
+                .catch((error) => toast.error(toUserMessage(error)))
+            }
+          >
+            Change password
           </Button>
-        </CardContent>
-      </Card>
+          <Button variant="outline" className="w-full" onClick={() => void signOut()}>
+            Log out
+          </Button>
+        </div>
+      </CollapsibleSection>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Data</CardTitle>
-          <CardDescription>Sample data is tagged and can be removed without touching real records.</CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-2">
+      <CollapsibleSection title="Data">
+        <div className="grid gap-2">
           <Button
             variant="outline"
             className="w-full"
@@ -287,8 +264,8 @@ export function SettingsPage() {
           <Button variant="destructive" className="w-full" onClick={() => setConfirmDelete(true)}>
             Delete account
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </CollapsibleSection>
 
       <ConfirmDialog
         open={confirmDelete}

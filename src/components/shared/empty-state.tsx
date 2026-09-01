@@ -15,7 +15,7 @@ export function EmptyState({
   action?: ReactNode
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-[1.125rem] border border-dashed border-border bg-card px-6 py-14 text-center">
+    <div className="flex flex-col items-center justify-center rounded-[1.125rem] border border-dashed border-border bg-card px-5 py-8 text-center">
       <div className="mb-4 flex size-12 items-center justify-center rounded-2xl bg-primary/10">
         <Icon className="size-5 text-primary" />
       </div>
@@ -46,7 +46,7 @@ export function ErrorState({
   onRetry?: () => void
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-[1.125rem] border border-border bg-card px-6 py-14 text-center">
+    <div className="flex flex-col items-center justify-center rounded-[1.125rem] border border-border bg-card px-5 py-8 text-center">
       <div className="mb-4 flex size-12 items-center justify-center rounded-2xl bg-destructive/10">
         <AlertCircle className="size-5 text-destructive" />
       </div>

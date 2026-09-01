@@ -11,6 +11,7 @@ export function TransactionRow({
   icon,
   color,
   onClick,
+  flush,
   className,
 }: {
   merchant: string
@@ -21,15 +22,17 @@ export function TransactionRow({
   icon?: string
   color?: string
   onClick?: () => void
+  flush?: boolean
   className?: string
 }) {
   const classes = cn(
-    'flex w-full min-w-0 items-center gap-3 rounded-xl border border-border bg-card px-3 py-3 text-left',
+    'flex w-full min-w-0 items-center gap-3 text-left',
+    flush ? 'rounded-none border-0 bg-transparent px-0 py-2' : 'rounded-xl border border-border bg-card px-3 py-2.5',
     className,
   )
   const body = (
     <>
-      <CategoryIcon name={icon ?? 'CircleEllipsis'} color={color} className="shrink-0" />
+      <CategoryIcon name={icon ?? 'CircleEllipsis'} color={color} size="sm" className="shrink-0" />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">{merchant}</p>
         <p className="truncate text-xs text-muted-foreground">{meta}</p>

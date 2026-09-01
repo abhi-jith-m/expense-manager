@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/shared/page-header'
 import { DateRangePicker } from '@/components/shared/date-range-picker'
 import { CurrencyDisplay } from '@/components/shared/currency-display'
 import { MobileSheet } from '@/components/shared/mobile-sheet'
-import { StatCard } from '@/components/shared/stat-card'
+import { CollapsibleSection } from '@/components/shared/collapsible-section'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -105,14 +105,25 @@ export function ReportsPage() {
           </SelectContent>
         </Select>
       </div>
-      <StatCard compact label="Income" value={totals.income} currency={user?.currency ?? 'USD'} />
-      <div className="grid grid-cols-2 gap-3">
-        <StatCard compact label="Expenses" value={totals.expenses} currency={user?.currency ?? 'USD'} />
-        <StatCard compact label="Net" value={totals.savings} currency={user?.currency ?? 'USD'} />
-      </div>
+      <Card>
+        <CardContent className="grid grid-cols-3 gap-2">
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Income</p>
+            <CurrencyDisplay amount={totals.income} currency={user?.currency ?? 'USD'} className="block text-base font-semibold" />
+          </div>
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Expenses</p>
+            <CurrencyDisplay amount={totals.expenses} currency={user?.currency ?? 'USD'} className="block text-base font-semibold" />
+          </div>
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Net</p>
+            <CurrencyDisplay amount={totals.savings} currency={user?.currency ?? 'USD'} className="block text-base font-semibold" />
+          </div>
+        </CardContent>
+      </Card>
       <Card>
         <CardHeader><CardTitle>Category totals</CardTitle></CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent className="space-y-1.5">
           {Object.entries(byCategory).map(([id, amount]) => (
             <div key={id} className="flex min-w-0 items-center justify-between gap-3 text-sm">
               <span className="truncate">{categoryMap[id] ?? 'Uncategorized'}</span>
@@ -124,11 +135,11 @@ export function ReportsPage() {
       {kind === 'account' ? (
         <Card>
           <CardHeader><CardTitle>Accounts</CardTitle></CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className="space-y-1.5">
             {(accounts.data ?? []).map((account) => (
               <div key={account.id} className="flex justify-between text-sm">
-                <span>{account.name}</span>
-                <span>{account.type}</span>
+                <span className="truncate">{account.name}</span>
+                <span className="text-muted-foreground">{account.type}</span>
               </div>
             ))}
           </CardContent>
@@ -137,27 +148,26 @@ export function ReportsPage() {
       {kind === 'budget' ? (
         <Card>
           <CardHeader><CardTitle>Budgets</CardTitle></CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className="space-y-1.5">
             {(budgets.data ?? []).map((budget) => (
               <div key={budget.id} className="flex justify-between text-sm">
-                <span>{budget.name}</span>
+                <span className="truncate">{budget.name}</span>
                 <CurrencyDisplay amount={budget.limitAmount} currency={user?.currency ?? 'USD'} />
               </div>
             ))}
           </CardContent>
         </Card>
       ) : null}
-      <Card>
-        <CardHeader><CardTitle>Transactions in range</CardTitle></CardHeader>
-        <CardContent className="space-y-2">
+      <CollapsibleSection title="Transactions in range">
+        <div className="space-y-1.5">
           {filtered.slice(0, 25).map((tx) => (
             <div key={tx.id} className="flex min-w-0 items-center justify-between gap-3 text-sm">
               <span className="min-w-0 truncate">{tx.date} · {tx.merchant || tx.type}</span>
               <CurrencyDisplay amount={tx.amount} currency={tx.currency} />
             </div>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </CollapsibleSection>
       <MobileSheet open={exportOpen} onOpenChange={setExportOpen} title="Export report">
         <div className="grid gap-2">
           <Button variant="outline" className="w-full" onClick={() => { exportPdf(); setExportOpen(false) }}>PDF</Button>

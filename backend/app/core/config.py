@@ -28,7 +28,20 @@ class Settings(BaseSettings):
     llm_max_retries: int = 2
     stable_change_threshold: float = 5.0
     cache_ttl_seconds: int = 300
-    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    cors_origins: str = (
+        "http://localhost:5173,http://127.0.0.1:5173,"
+        "https://aureum-expense-manager.vercel.app"
+    )
+    cors_origin_regex: str = r"https://([a-z0-9-]+\.)*vercel\.app"
+
+
+def parse_cors_origins(raw: str) -> list[str]:
+    origins: list[str] = []
+    for item in raw.split(","):
+        origin = item.strip().strip("\"'").rstrip("/")
+        if origin:
+            origins.append(origin)
+    return origins
 
 
 @lru_cache

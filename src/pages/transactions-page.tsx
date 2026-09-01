@@ -253,12 +253,13 @@ export function TransactionsPage() {
             </table>
           </div>
 
-          <div className="space-y-2 md:hidden">
+          <div className="divide-y divide-border rounded-xl border border-border bg-card px-3 md:hidden">
             {pageItems.map((tx) => {
               const category = tx.categoryId ? categoryMap[tx.categoryId] : undefined
               return (
                 <TransactionRow
                   key={tx.id}
+                  flush
                   merchant={tx.merchant || 'Untitled'}
                   meta={`${category?.name ?? tx.type} · ${formatDate(tx.date, user?.dateFormat)}`}
                   amount={tx.amount}

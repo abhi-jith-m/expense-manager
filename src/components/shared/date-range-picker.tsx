@@ -149,7 +149,7 @@ export function DateRangePicker({
 
   return (
     <>
-      <Button variant="outline" className="w-full justify-start gap-2" onClick={() => setOpen(true)}>
+      <Button variant="outline" className={fullWidth ? 'w-full justify-start gap-2' : 'max-w-full justify-start gap-2'} onClick={() => setOpen(true)}>
         {label}
       </Button>
       <MobileSheet

@@ -1,7 +1,51 @@
 from datetime import date
 
+from app.core.config import parse_cors_origins
 from app.repositories.insights import save_analysis
 from app.schemas.insights import AnalysisPeriod, AnalyzeResponse, FinancialInsight
+
+
+def test_parse_cors_origins_strips_quotes_and_slashes():
+    assert parse_cors_origins(' "https://app.vercel.app/" , http://localhost:5173 ') == [
+        "https://app.vercel.app",
+        "http://localhost:5173",
+    ]
+
+
+def _preflight(client, origin: str, path: str = "/api/insights/analyze"):
+    return client.options(
+        path,
+        headers={
+            "Origin": origin,
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "authorization,content-type,x-user-id",
+        },
+    )
+
+
+def test_cors_preflight_allows_local_origin(client):
+    response = _preflight(client, "http://localhost:5173")
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "http://localhost:5173"
+
+
+def test_cors_preflight_allows_vercel_origin(client):
+    origin = "https://aureum-expense-manager.vercel.app"
+    response = _preflight(client, origin)
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == origin
+
+
+def test_cors_preflight_allows_vercel_preview_origin(client):
+    origin = "https://aureum-expense-manager-9nsvd0egl-abhijith0212s-projects.vercel.app"
+    response = _preflight(client, origin)
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == origin
+
+
+def test_cors_preflight_rejects_unknown_origin(client):
+    response = _preflight(client, "https://evil.example")
+    assert response.status_code == 400
 
 
 def test_analyze_requires_auth(client):

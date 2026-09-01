@@ -43,11 +43,22 @@ export function IncomePage() {
         description="Salary, freelance, and other inflows. Transfers are excluded from these totals."
         actions={<Button className="w-full sm:w-auto" onClick={() => setOpen(true)}><Plus className="size-4" />Add income</Button>}
       />
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-        <Card className="col-span-2 md:col-span-1"><CardContent className="space-y-1 px-3 py-2.5"><p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Total income</p><CurrencyDisplay amount={totals.income} currency={user?.currency ?? 'USD'} className="text-xl font-semibold tracking-tight" /></CardContent></Card>
-        <Card><CardContent className="space-y-1 px-3 py-2.5"><p className="text-xs uppercase text-muted-foreground">Sources</p><p className="text-xl font-medium">{bySource.length}</p></CardContent></Card>
-        <Card><CardContent className="space-y-1 px-3 py-2.5"><p className="text-xs uppercase text-muted-foreground">Entries</p><p className="text-xl font-medium">{income.length}</p></CardContent></Card>
-      </div>
+      <Card>
+        <CardContent className="grid grid-cols-3 gap-2">
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Income</p>
+            <CurrencyDisplay amount={totals.income} currency={user?.currency ?? 'USD'} className="block text-lg font-semibold" />
+          </div>
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Sources</p>
+            <p className="text-lg font-semibold">{bySource.length}</p>
+          </div>
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Entries</p>
+            <p className="text-lg font-semibold">{income.length}</p>
+          </div>
+        </CardContent>
+      </Card>
       <ChartCard title="Income by source" compact>
         <ResponsiveChart>
           <BarChart data={bySource} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
@@ -58,10 +69,12 @@ export function IncomePage() {
           </BarChart>
         </ResponsiveChart>
       </ChartCard>
-      <div className="space-y-2">
+      <Card>
+        <CardContent className="divide-y divide-border px-3.5 py-1">
         {income.map((tx) => (
           <TransactionRow
             key={tx.id}
+            flush
             merchant={tx.merchant || 'Income'}
             meta={tx.date}
             amount={tx.amount}
@@ -69,7 +82,8 @@ export function IncomePage() {
             tone="income"
           />
         ))}
-      </div>
+        </CardContent>
+      </Card>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader><DialogTitle>Add income</DialogTitle></DialogHeader>

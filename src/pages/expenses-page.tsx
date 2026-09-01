@@ -22,7 +22,7 @@ export function ExpensesPage() {
         description="A fast, keyboard-friendly form. Amount first, then the details that matter."
       />
       <Card>
-        <CardContent className="p-4 sm:p-6">
+        <CardContent>
           <TransactionForm
             wide
             accounts={accounts.data ?? []}

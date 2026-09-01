@@ -19,14 +19,14 @@ export function ChartCard({
 }) {
   return (
     <Card className={cn('flex min-h-0 min-w-0 flex-col', className)}>
-      <CardHeader className={cn('flex-row items-start justify-between gap-3', compact && 'px-3 pt-3')}>
+      <CardHeader className={cn('flex-row items-center justify-between gap-2', compact && 'px-3.5 pt-3')}>
         <div>
           <CardTitle className={compact ? 'text-sm' : undefined}>{title}</CardTitle>
-          {description ? <CardDescription>{description}</CardDescription> : null}
+          {description ? <CardDescription className="hidden md:block">{description}</CardDescription> : null}
         </div>
         {action}
       </CardHeader>
-      <CardContent className={cn('min-h-0 min-w-0 flex-1', compact && 'px-3 pb-3 pt-2')}>{children}</CardContent>
+      <CardContent className={cn('min-h-0 min-w-0 flex-1', compact ? 'px-3.5 pb-3 pt-1.5' : 'pt-2')}>{children}</CardContent>
     </Card>
   )
 }

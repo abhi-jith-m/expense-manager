@@ -2,7 +2,6 @@ import { toast } from 'sonner'
 import { PageHeader } from '@/components/shared/page-header'
 import { EmptyState } from '@/components/shared/empty-state'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { useAuth } from '@/contexts/auth-context'
 import { useInvalidateFinance, useNotifications } from '@/hooks/use-finance'
 import { formatDateTime } from '@/lib/dates'
@@ -30,10 +29,10 @@ export function NotificationsPage() {
       {items.length === 0 ? (
         <EmptyState icon={Bell} title="You're all caught up" description="Meaningful alerts will appear here when budgets, goals, or imports need attention." />
       ) : (
-        <div className="space-y-3">
+        <div className="divide-y divide-border rounded-xl border border-border bg-card">
           {items.map((item) => (
-            <Card key={item.id} className={item.read ? 'opacity-70' : ''}>
-              <CardContent className="flex items-start justify-between gap-3">
+            <div key={item.id} className={item.read ? 'px-3.5 py-3 opacity-70' : 'px-3.5 py-3'}>
+              <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="font-medium">{item.title}</p>
                   <p className="text-sm text-muted-foreground">{item.body}</p>
@@ -49,8 +48,8 @@ export function NotificationsPage() {
                     Dismiss
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       )}

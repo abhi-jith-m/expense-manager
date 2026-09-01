@@ -66,7 +66,7 @@ export function TransactionForm({
 
   return (
     <form
-      className={wide ? 'flex h-full min-h-0 flex-col gap-5' : 'grid gap-4'}
+      className={wide ? 'flex min-h-0 flex-col gap-3' : 'grid gap-3'}
       onSubmit={form.handleSubmit(async (values) => {
         await onSubmit({
           ...values,
@@ -81,8 +81,8 @@ export function TransactionForm({
         })
       })}
     >
-      <div className={wide ? 'grid gap-4 sm:grid-cols-2 xl:grid-cols-4' : 'grid grid-cols-1 gap-4 sm:grid-cols-2'}>
-        <div className="space-y-1.5">
+      <div className={wide ? 'grid gap-3 sm:grid-cols-2 xl:grid-cols-4' : 'grid grid-cols-1 gap-3 sm:grid-cols-2'}>
+        <div className="space-y-1">
           <Label htmlFor="type">Type</Label>
           <Select value={type} onValueChange={(value) => form.setValue('type', value as Transaction['type'])}>
             <SelectTrigger id="type">
@@ -95,14 +95,14 @@ export function TransactionForm({
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <Label htmlFor="amount">Amount</Label>
           <Input id="amount" type="number" step="0.01" inputMode="decimal" {...form.register('amount')} />
           {form.formState.errors.amount ? (
             <p className="text-xs text-destructive">{form.formState.errors.amount.message}</p>
           ) : null}
         </div>
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <Label htmlFor="currency">Currency</Label>
           <Select value={form.watch('currency')} onValueChange={(value) => form.setValue('currency', value)}>
             <SelectTrigger id="currency">
@@ -117,13 +117,13 @@ export function TransactionForm({
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <Label htmlFor="date">Date</Label>
           <Input id="date" type="date" {...form.register('date')} />
         </div>
         {type !== 'transfer' ? (
           <>
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               <Label htmlFor="category">Category</Label>
               <Select
                 value={form.watch('categoryId') ?? ''}
@@ -141,7 +141,7 @@ export function TransactionForm({
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               <Label htmlFor="subcategory">Subcategory</Label>
               <Select
                 value={form.watch('subcategoryId') ?? ''}
@@ -162,7 +162,7 @@ export function TransactionForm({
             </div>
           </>
         ) : null}
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <Label htmlFor="account">{type === 'transfer' ? 'From account' : 'Account'}</Label>
           <Select value={form.watch('accountId')} onValueChange={(value) => form.setValue('accountId', value)}>
             <SelectTrigger id="account">
@@ -178,7 +178,7 @@ export function TransactionForm({
           </Select>
         </div>
         {type === 'transfer' ? (
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <Label htmlFor="toAccount">To account</Label>
             <Select
               value={form.watch('toAccountId') ?? ''}
@@ -200,7 +200,7 @@ export function TransactionForm({
             ) : null}
           </div>
         ) : (
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <Label htmlFor="paymentMethod">Payment method</Label>
             <Select
               value={form.watch('paymentMethod')}
@@ -219,11 +219,11 @@ export function TransactionForm({
             </Select>
           </div>
         )}
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <Label htmlFor="merchant">{type === 'income' ? 'Source' : 'Merchant'}</Label>
           <Input id="merchant" {...form.register('merchant')} />
         </div>
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <Label htmlFor="tags">Tags</Label>
           <Input
             id="tags"
@@ -233,11 +233,11 @@ export function TransactionForm({
           />
         </div>
       </div>
-      <div className={wide ? 'flex min-h-0 flex-1 flex-col space-y-1.5' : 'space-y-1.5'}>
+      <div className={wide ? 'flex min-h-0 flex-1 flex-col space-y-1' : 'space-y-1'}>
         <Label htmlFor="notes">Notes</Label>
         <Textarea
           id="notes"
-          className={wide ? 'min-h-32 flex-1 resize-none' : undefined}
+          className={wide ? 'min-h-20 resize-none md:min-h-32' : 'min-h-20'}
           {...form.register('notes')}
         />
       </div>
