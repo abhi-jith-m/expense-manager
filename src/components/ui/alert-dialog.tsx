@@ -18,7 +18,8 @@ export function AlertDialogContent({
       />
       <AlertDialogPrimitive.Content
         className={cn(
-          'fixed left-1/2 top-1/2 z-[100] w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-[1.25rem] border border-border bg-card-elevated p-6',
+          'fixed left-1/2 top-1/2 z-[100] w-[min(calc(100%-2rem),28rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-[1.25rem] border border-border bg-card-elevated p-5',
+          'max-md:top-auto max-md:bottom-0 max-md:left-0 max-md:right-0 max-md:w-full max-md:max-w-none max-md:translate-x-0 max-md:translate-y-0 max-md:rounded-b-none max-md:pb-[max(1.25rem,env(safe-area-inset-bottom))]',
           className,
         )}
         {...props}
@@ -48,7 +49,7 @@ export function AlertDialogDescription({
 }
 
 export function AlertDialogFooter({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('mt-6 flex justify-end gap-2', className)} {...props} />
+  return <div className={cn('mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end', className)} {...props} />
 }
 
 export function AlertDialogCancel({

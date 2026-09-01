@@ -17,9 +17,9 @@ export function ProfilePage() {
   if (!user) return null
 
   return (
-    <div className="space-y-5">
+    <div className="page-stack">
       <PageHeader title="Profile" description="Your name and avatar appear across the workspace." />
-      <Card className="max-w-xl">
+      <Card>
         <CardContent className="space-y-5">
           <div className="flex items-center gap-4">
             <Avatar className="size-16">

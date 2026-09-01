@@ -81,7 +81,7 @@ export function TransactionForm({
         })
       })}
     >
-      <div className={wide ? 'grid gap-4 sm:grid-cols-2 xl:grid-cols-4' : 'grid grid-cols-2 gap-4'}>
+      <div className={wide ? 'grid gap-4 sm:grid-cols-2 xl:grid-cols-4' : 'grid grid-cols-1 gap-4 sm:grid-cols-2'}>
         <div className="space-y-1.5">
           <Label htmlFor="type">Type</Label>
           <Select value={type} onValueChange={(value) => form.setValue('type', value as Transaction['type'])}>
@@ -242,7 +242,7 @@ export function TransactionForm({
         />
       </div>
       <div className={wide ? 'flex justify-end' : undefined}>
-        <Button type="submit" disabled={submitting} className={wide ? 'min-w-40' : undefined}>
+        <Button type="submit" disabled={submitting} className={wide ? 'h-11 w-full md:w-auto md:min-w-40' : 'h-11 w-full sm:w-auto'}>
           {submitting ? 'Saving…' : initial ? 'Save changes' : 'Save transaction'}
         </Button>
       </div>

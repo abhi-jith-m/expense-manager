@@ -4,7 +4,7 @@ import type { VioChartSeries } from '@/lib/insights-api'
 
 export function VioChart({ chart, currency }: { chart: VioChartSeries; currency: string }) {
   return (
-    <div className="h-36 rounded-xl border border-border bg-card px-2 py-2">
+    <div className="h-36 w-full min-w-0 max-w-full rounded-xl border border-border bg-card px-2 py-2">
       <ResponsiveContainer width="100%" height="100%">
         {chart.type === 'line' ? (
           <LineChart data={chart.points}>

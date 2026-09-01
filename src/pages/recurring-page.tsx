@@ -46,8 +46,8 @@ export function RecurringPage() {
   })
 
   return (
-    <div className="space-y-5">
-      <PageHeader title="Recurring" description="Due items generate real transactions once per occurrence. Existing dates are never duplicated." actions={<Button onClick={() => setOpen(true)}>Add recurring</Button>} />
+    <div className="page-stack">
+      <PageHeader title="Recurring" description="Due items generate real transactions once per occurrence. Existing dates are never duplicated." actions={<Button className="w-full sm:w-auto" onClick={() => setOpen(true)}>Add recurring</Button>} />
       {(recurring.data ?? []).length === 0 ? (
         <EmptyState icon={Repeat} title="No recurring rules" description="Use this for rent, subscriptions, salary, and utilities." action={<Button onClick={() => setOpen(true)}>Create rule</Button>} />
       ) : (
@@ -98,7 +98,7 @@ export function RecurringPage() {
               toast.error(toUserMessage(error))
             }
           })}>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Select value={form.watch('type')} onValueChange={(value) => form.setValue('type', value as RecurringValues['type'])}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -121,7 +121,7 @@ export function RecurringPage() {
                 {(categories.data ?? []).filter((item) => !item.parentId).map((item) => <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>)}
               </SelectContent>
             </Select>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Select value={form.watch('frequency')} onValueChange={(value) => form.setValue('frequency', value as RecurringValues['frequency'])}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -134,11 +134,11 @@ export function RecurringPage() {
               </Select>
               <Input type="number" {...form.register('interval')} aria-label="Interval" />
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="space-y-1.5"><Label>Start</Label><Input type="date" {...form.register('startDate')} /></div>
               <div className="space-y-1.5"><Label>End</Label><Input type="date" {...form.register('endDate')} /></div>
             </div>
-            <Button type="submit">Save</Button>
+            <Button type="submit" className="w-full">Save</Button>
           </form>
         </DialogContent>
       </Dialog>

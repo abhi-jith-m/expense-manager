@@ -2,9 +2,12 @@ import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import { Download } from 'lucide-react'
 import { PageHeader } from '@/components/shared/page-header'
 import { DateRangePicker } from '@/components/shared/date-range-picker'
 import { CurrencyDisplay } from '@/components/shared/currency-display'
+import { MobileSheet } from '@/components/shared/mobile-sheet'
+import { StatCard } from '@/components/shared/stat-card'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -22,6 +25,7 @@ export function ReportsPage() {
   const [range, setRange] = useState<DateRange>(defaultMonthRange)
   const [kind, setKind] = useState('monthly')
   const [type, setType] = useState<TransactionType | 'all'>('all')
+  const [exportOpen, setExportOpen] = useState(false)
   const transactions = useTransactions()
   const categories = useCategories()
   const accounts = useAccounts()
@@ -68,23 +72,21 @@ export function ReportsPage() {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="page-stack">
       <PageHeader
         title="Reports"
         description="Generate summaries from live data, then export PDF, CSV, Excel, or JSON."
         actions={
-          <div className="flex flex-wrap gap-2">
-            <DateRangePicker value={range} onChange={setRange} />
-            <Button variant="outline" onClick={exportPdf}>PDF</Button>
-            <Button variant="outline" onClick={exportCsv}>CSV</Button>
-            <Button variant="outline" onClick={exportXlsx}>Excel</Button>
-            <Button variant="outline" onClick={exportJson}>JSON</Button>
-          </div>
+          <Button variant="outline" className="w-full sm:w-auto" onClick={() => setExportOpen(true)}>
+            <Download className="size-4" />
+            Export
+          </Button>
         }
       />
-      <div className="flex flex-wrap gap-3">
+      <DateRangePicker value={range} onChange={setRange} fullWidth />
+      <div className="grid gap-3">
         <Select value={kind} onValueChange={setKind}>
-          <SelectTrigger className="w-52"><SelectValue /></SelectTrigger>
+          <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="monthly">Monthly expense report</SelectItem>
             <SelectItem value="income">Income report</SelectItem>
@@ -95,7 +97,7 @@ export function ReportsPage() {
           </SelectContent>
         </Select>
         <Select value={type} onValueChange={(value) => setType(value as typeof type)}>
-          <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+          <SelectTrigger><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All types</SelectItem>
             <SelectItem value="expense">Expenses</SelectItem>
@@ -103,17 +105,17 @@ export function ReportsPage() {
           </SelectContent>
         </Select>
       </div>
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card><CardContent><p className="text-xs uppercase text-muted-foreground">Income</p><CurrencyDisplay amount={totals.income} currency={user?.currency ?? 'USD'} className="text-2xl" /></CardContent></Card>
-        <Card><CardContent><p className="text-xs uppercase text-muted-foreground">Expenses</p><CurrencyDisplay amount={totals.expenses} currency={user?.currency ?? 'USD'} className="text-2xl" /></CardContent></Card>
-        <Card><CardContent><p className="text-xs uppercase text-muted-foreground">Net</p><CurrencyDisplay amount={totals.savings} currency={user?.currency ?? 'USD'} className="text-2xl" /></CardContent></Card>
+      <StatCard compact label="Income" value={totals.income} currency={user?.currency ?? 'USD'} />
+      <div className="grid grid-cols-2 gap-3">
+        <StatCard compact label="Expenses" value={totals.expenses} currency={user?.currency ?? 'USD'} />
+        <StatCard compact label="Net" value={totals.savings} currency={user?.currency ?? 'USD'} />
       </div>
       <Card>
         <CardHeader><CardTitle>Category totals</CardTitle></CardHeader>
         <CardContent className="space-y-2">
           {Object.entries(byCategory).map(([id, amount]) => (
-            <div key={id} className="flex justify-between text-sm">
-              <span>{categoryMap[id] ?? 'Uncategorized'}</span>
+            <div key={id} className="flex min-w-0 items-center justify-between gap-3 text-sm">
+              <span className="truncate">{categoryMap[id] ?? 'Uncategorized'}</span>
               <CurrencyDisplay amount={amount} currency={user?.currency ?? 'USD'} />
             </div>
           ))}
@@ -149,13 +151,21 @@ export function ReportsPage() {
         <CardHeader><CardTitle>Transactions in range</CardTitle></CardHeader>
         <CardContent className="space-y-2">
           {filtered.slice(0, 25).map((tx) => (
-            <div key={tx.id} className="flex justify-between text-sm">
-              <span>{tx.date} · {tx.merchant || tx.type}</span>
+            <div key={tx.id} className="flex min-w-0 items-center justify-between gap-3 text-sm">
+              <span className="min-w-0 truncate">{tx.date} · {tx.merchant || tx.type}</span>
               <CurrencyDisplay amount={tx.amount} currency={tx.currency} />
             </div>
           ))}
         </CardContent>
       </Card>
+      <MobileSheet open={exportOpen} onOpenChange={setExportOpen} title="Export report">
+        <div className="grid gap-2">
+          <Button variant="outline" className="w-full" onClick={() => { exportPdf(); setExportOpen(false) }}>PDF</Button>
+          <Button variant="outline" className="w-full" onClick={() => { exportCsv(); setExportOpen(false) }}>CSV</Button>
+          <Button variant="outline" className="w-full" onClick={() => { exportXlsx(); setExportOpen(false) }}>Excel</Button>
+          <Button variant="outline" className="w-full" onClick={() => { exportJson(); setExportOpen(false) }}>JSON</Button>
+        </div>
+      </MobileSheet>
     </div>
   )
 }

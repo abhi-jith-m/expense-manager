@@ -15,7 +15,7 @@ export function NotificationsPage() {
   const items = notifications.data ?? []
 
   return (
-    <div className="space-y-5">
+    <div className="page-stack">
       <PageHeader
         title="Notifications"
         description="Budget, recurring, goal, and import events. Preferences live in Settings."

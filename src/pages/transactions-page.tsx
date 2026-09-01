@@ -9,6 +9,7 @@ import { FileUploader } from '@/components/shared/file-uploader'
 import { EmptyState } from '@/components/shared/empty-state'
 import { CurrencyDisplay } from '@/components/shared/currency-display'
 import { CategoryIcon } from '@/components/shared/category-icon'
+import { TransactionRow } from '@/components/shared/transaction-row'
 import { ConfirmDialog } from '@/components/shared/confirm-dialog'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -88,11 +89,11 @@ export function TransactionsPage() {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="page-stack">
       <PageHeader
         title="Transactions"
         description="Search, filter, and manage every movement of money."
-        actions={<Button onClick={openCreate}>Add transaction</Button>}
+        actions={<Button className="w-full sm:w-auto" onClick={openCreate}>Add transaction</Button>}
       />
       <FilterBar
         filters={filters}
@@ -103,6 +104,11 @@ export function TransactionsPage() {
         accounts={accounts}
         categories={categories}
         savedFilters={savedFiltersQuery.data}
+        sortField={sortField}
+        onSortChange={(field) => {
+          setSortField(field)
+          setPage(0)
+        }}
         onSave={() => {
           const name = window.prompt('Name this filter')
           if (name) void saveFilter.mutateAsync({ name, filters }).then(() => toast.success('Filter saved'))
@@ -125,7 +131,7 @@ export function TransactionsPage() {
               })
             }}
           >
-            <SelectTrigger className="w-44">
+            <SelectTrigger className="w-full sm:w-44">
               <SelectValue placeholder="Change category" />
             </SelectTrigger>
             <SelectContent>
@@ -153,8 +159,8 @@ export function TransactionsPage() {
         />
       ) : (
         <>
-          <div className="hidden overflow-hidden rounded-xl border border-border bg-card md:block">
-            <table className="w-full text-sm">
+          <div className="hidden overflow-x-auto rounded-xl border border-border bg-card md:block">
+            <table className="w-full min-w-[640px] text-sm">
               <thead className="bg-muted/60 text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
                   <th className="p-3">
@@ -247,31 +253,24 @@ export function TransactionsPage() {
             </table>
           </div>
 
-          <div className="space-y-3 md:hidden">
+          <div className="space-y-2 md:hidden">
             {pageItems.map((tx) => {
               const category = tx.categoryId ? categoryMap[tx.categoryId] : undefined
               return (
-                <button
+                <TransactionRow
                   key={tx.id}
-                  className="flex w-full items-center gap-3 rounded-xl border border-border bg-card p-4 text-left"
+                  merchant={tx.merchant || 'Untitled'}
+                  meta={`${category?.name ?? tx.type} · ${formatDate(tx.date, user?.dateFormat)}`}
+                  amount={tx.amount}
+                  currency={tx.currency}
+                  icon={category?.icon}
+                  color={category?.color}
+                  tone={tx.type === 'income' ? 'income' : tx.type === 'expense' ? 'expense' : 'transfer'}
                   onClick={() => {
                     setEditing(tx)
                     setFormOpen(true)
                   }}
-                >
-                  <CategoryIcon name={category?.icon ?? 'CircleEllipsis'} color={category?.color} />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium">{tx.merchant || 'Untitled'}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {formatDate(tx.date, user?.dateFormat)} · {accountMap[tx.accountId]?.name}
-                    </p>
-                  </div>
-                  <CurrencyDisplay
-                    amount={tx.amount}
-                    currency={tx.currency}
-                    tone={tx.type === 'income' ? 'income' : tx.type === 'expense' ? 'expense' : 'transfer'}
-                  />
-                </button>
+                />
               )
             })}
           </div>

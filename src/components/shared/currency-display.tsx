@@ -18,7 +18,7 @@ export function CurrencyDisplay({
   return (
     <span
       className={cn(
-        'tabular tracking-tight',
+        'money shrink-0 text-right',
         resolved === 'income' && 'text-income',
         resolved === 'expense' && 'text-expense',
         resolved === 'transfer' && 'text-info',

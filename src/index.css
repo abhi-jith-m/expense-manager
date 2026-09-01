@@ -72,7 +72,10 @@
   --z-modal: 110;
   --vio-bg: #fbfafd;
   --vio-surface: #ffffff;
-  --mobile-nav-height: 4.75rem;
+  --page-pad: 1rem;
+  --header-height: 3.5rem;
+  --mobile-nav-height: 4.25rem;
+  --touch: 2.75rem;
 }
 
 .dark {
@@ -211,15 +214,18 @@
 
   html {
     @apply scroll-smooth;
+    overflow-x: clip;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-feature-settings: "ss01", "cv11", "tnum";
+    overflow-x: clip;
   }
 
   #root {
     min-height: 100svh;
+    overflow-x: clip;
   }
 
   :focus-visible {
@@ -239,6 +245,56 @@
 
   .tabular {
     font-variant-numeric: tabular-nums;
+  }
+
+  .page-stack {
+    display: flex;
+    min-width: 0;
+    max-width: 100%;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .page-stack > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .money {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .chart-frame {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: 12.5rem;
+  }
+
+  @media (min-width: 390px) {
+    .chart-frame {
+      height: 13.5rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .chart-frame {
+      height: 16rem;
+    }
+  }
+
+  @media (min-width: 390px) {
+    :root {
+      --page-pad: 1.25rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --page-pad: 1.5rem;
+    }
   }
 
   .glass-panel {
@@ -316,13 +372,17 @@
 
   @media (max-width: 1023px) {
     .vio-workspace {
-      inset: 0;
+      top: auto;
+      right: 0;
+      bottom: 0;
+      left: 0;
       width: 100%;
-      height: auto;
+      height: min(94svh, calc(100dvh - var(--header-height)));
       transform: translateY(110%);
       border-left: 0;
       border-top: 1px solid var(--border);
       border-radius: 1.25rem 1.25rem 0 0;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
       transition: transform 220ms ease;
     }
 

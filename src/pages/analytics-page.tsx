@@ -1,23 +1,24 @@
 import { useMemo, useState } from 'react'
 import { eachDayOfInterval, format, getDay } from 'date-fns'
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts'
 import { PageHeader } from '@/components/shared/page-header'
 import { DateRangePicker } from '@/components/shared/date-range-picker'
 import { ChartCard } from '@/components/shared/chart-card'
+import { ResponsiveChart } from '@/components/shared/responsive-chart'
 import { CurrencyDisplay } from '@/components/shared/currency-display'
-import { Card, CardContent } from '@/components/ui/card'
+import { StatCard } from '@/components/shared/stat-card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/contexts/auth-context'
 import { useAccounts, useCategories, useTransactions } from '@/hooks/use-finance'
 import { applyTransactionFilters } from '@/lib/filters'
 import { buildInsights } from '@/lib/insights'
 import { categoryTotals, computeTotals, sumBy } from '@/lib/money'
 import { defaultMonthRange, previousRange } from '@/lib/dates'
-import { formatMoney } from '@/lib/currency'
 import { ChartTooltipContent } from '@/components/shared/chart-tooltip'
 import { CHART } from '@/lib/palette'
 import type { DateRange } from '@/types'
 
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
 export function AnalyticsPage() {
   const { user } = useAuth()
@@ -37,7 +38,7 @@ export function AnalyticsPage() {
     const key = format(day, 'yyyy-MM-dd')
     const dayTx = current.filter((tx) => tx.date === key)
     const computed = computeTotals(dayTx)
-    return { label: format(day, 'MMM d'), ...computed }
+    return { label: format(day, 'd'), ...computed }
   })
 
   const weekday = WEEKDAYS.map((label, index) => ({
@@ -70,53 +71,127 @@ export function AnalyticsPage() {
 
   const largest = [...expenses].sort((a, b) => b.amount - a.amount)[0]
   const byCategory = categoryTotals(expenses)
-  const topCategoryId = Object.entries(byCategory).sort((a, b) => b[1] - a[1])[0]?.[0]
+  const rankedCategories = Object.entries(byCategory)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 6)
+  const topCategoryId = rankedCategories[0]?.[0]
   const days = Math.max(1, trend.length)
 
   return (
-    <div className="space-y-5">
-      <PageHeader title="Analytics" description="Insights are generated only from your transactions in the selected range." actions={<DateRangePicker value={range} onChange={setRange} />} />
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card><CardContent><p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Avg daily spend</p><CurrencyDisplay amount={totals.expenses / days} currency={currency} className="text-xl font-semibold tracking-tight" /></CardContent></Card>
-        <Card><CardContent><p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Largest transaction</p><p className="text-xl font-semibold tracking-tight tabular">{largest ? formatMoney(largest.amount, currency) : '—'}</p></CardContent></Card>
-        <Card><CardContent><p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Highest category</p><p className="text-xl font-semibold tracking-tight">{topCategoryId ? categoryMap[topCategoryId] : '—'}</p></CardContent></Card>
-        <Card><CardContent><p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Savings rate</p><p className="text-xl font-semibold tracking-tight tabular">{totals.savingsRate.toFixed(0)}%</p></CardContent></Card>
+    <div className="page-stack">
+      <PageHeader title="Analytics" description="Insights are generated only from your transactions in the selected range." />
+      <DateRangePicker value={range} onChange={setRange} fullWidth />
+
+      <StatCard compact label="Spending" value={totals.expenses} currency={currency} />
+      <div className="grid grid-cols-2 gap-3">
+        <StatCard compact label="Avg daily" value={totals.expenses / days} currency={currency} />
+        <StatCard
+          compact
+          label="Savings rate"
+          value={totals.savingsRate}
+          currency={currency}
+          formatted={`${totals.savingsRate.toFixed(0)}%`}
+        />
       </div>
+      <div className="grid grid-cols-2 gap-3">
+        <Card>
+          <CardContent className="space-y-1 px-3 py-2.5">
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Largest</p>
+            {largest ? (
+              <CurrencyDisplay amount={largest.amount} currency={currency} className="text-lg font-semibold" />
+            ) : (
+              <p className="text-lg font-semibold">—</p>
+            )}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="space-y-1 px-3 py-2.5">
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Top category</p>
+            <p className="truncate text-lg font-semibold">{topCategoryId ? categoryMap[topCategoryId] : '—'}</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <ChartCard title="Trend" compact>
+        <ResponsiveChart>
+          <AreaChart data={trend} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+            <XAxis dataKey="label" interval="preserveStartEnd" tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
+            <YAxis width={36} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
+            <Tooltip cursor={{ stroke: 'var(--border)' }} content={<ChartTooltipContent currency={currency} />} />
+            <Area dataKey="expenses" stroke={CHART.expenses} fill={CHART.expenses} fillOpacity={0.1} />
+            <Area dataKey="income" stroke={CHART.income} fill={CHART.income} fillOpacity={0.08} />
+          </AreaChart>
+        </ResponsiveChart>
+      </ChartCard>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Top categories</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {rankedCategories.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No category spend in this range.</p>
+          ) : (
+            rankedCategories.map(([id, amount]) => (
+              <div key={id} className="flex min-w-0 items-center justify-between gap-3 text-sm">
+                <span className="truncate">{categoryMap[id] ?? 'Uncategorized'}</span>
+                <CurrencyDisplay amount={amount} currency={currency} />
+              </div>
+            ))
+          )}
+        </CardContent>
+      </Card>
+
       {insights.length ? (
         <div className="grid gap-2">
           {insights.map((item) => (
-            <p key={item.id} className="rounded-xl border border-border bg-card px-4 py-3 text-sm">{item.text}</p>
+            <p key={item.id} className="rounded-xl border border-border bg-card px-4 py-3 text-sm">
+              {item.text}
+            </p>
           ))}
         </div>
       ) : (
         <p className="text-sm text-muted-foreground">Add more history to unlock comparison insights.</p>
       )}
-      <ChartCard title="Spending and income trend">
-        <div className="h-72">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={trend}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-              <XAxis dataKey="label" tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
-              <Tooltip cursor={{ stroke: 'var(--border)' }} content={<ChartTooltipContent currency={currency} />} />
-              <Area dataKey="expenses" stroke={CHART.expenses} fill={CHART.expenses} fillOpacity={0.1} />
-              <Area dataKey="income" stroke={CHART.income} fill={CHART.income} fillOpacity={0.08} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </ChartCard>
+
       <div className="grid gap-4 lg:grid-cols-2">
-        <ChartCard title="Weekday spending">
-          <div className="h-64"><ResponsiveContainer width="100%" height="100%"><BarChart data={weekday}><XAxis dataKey="label" tick={{ fill: 'var(--muted-foreground)', fontSize: 11 }} axisLine={false} tickLine={false} /><Tooltip content={<ChartTooltipContent currency={currency} />} /><Bar dataKey="value" fill={CHART.info} radius={6} /></BarChart></ResponsiveContainer></div>
+        <ChartCard title="Weekday spending" compact>
+          <ResponsiveChart>
+            <BarChart data={weekday} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+              <XAxis dataKey="label" tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }} axisLine={false} tickLine={false} />
+              <Tooltip content={<ChartTooltipContent currency={currency} />} />
+              <Bar dataKey="value" fill={CHART.info} radius={6} />
+            </BarChart>
+          </ResponsiveChart>
         </ChartCard>
-        <ChartCard title="Merchant analysis">
-          <div className="h-64"><ResponsiveContainer width="100%" height="100%"><BarChart data={merchants} layout="vertical"><XAxis type="number" hide /><YAxis type="category" dataKey="name" width={100} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} /><Tooltip content={<ChartTooltipContent currency={currency} />} /><Bar dataKey="value" fill={CHART.entertainment} radius={6} /></BarChart></ResponsiveContainer></div>
+        <ChartCard title="Merchants" compact>
+          <ResponsiveChart>
+            <BarChart data={merchants} layout="vertical" margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+              <XAxis type="number" hide />
+              <YAxis type="category" dataKey="name" width={72} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
+              <Tooltip content={<ChartTooltipContent currency={currency} />} />
+              <Bar dataKey="value" fill={CHART.entertainment} radius={6} />
+            </BarChart>
+          </ResponsiveChart>
         </ChartCard>
-        <ChartCard title="Payment methods">
-          <div className="h-64"><ResponsiveContainer width="100%" height="100%"><BarChart data={methods}><XAxis dataKey="name" tick={{ fill: 'var(--muted-foreground)', fontSize: 11 }} axisLine={false} tickLine={false} /><Tooltip content={<ChartTooltipContent currency={currency} />} /><Bar dataKey="value" fill={CHART.investments} radius={6} /></BarChart></ResponsiveContainer></div>
+        <ChartCard title="Payment methods" compact>
+          <ResponsiveChart>
+            <BarChart data={methods} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+              <XAxis dataKey="name" tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }} axisLine={false} tickLine={false} />
+              <Tooltip content={<ChartTooltipContent currency={currency} />} />
+              <Bar dataKey="value" fill={CHART.investments} radius={6} />
+            </BarChart>
+          </ResponsiveChart>
         </ChartCard>
-        <ChartCard title="Account spending">
-          <div className="h-64"><ResponsiveContainer width="100%" height="100%"><BarChart data={accountSpend}><XAxis dataKey="name" tick={{ fill: 'var(--muted-foreground)', fontSize: 11 }} axisLine={false} tickLine={false} /><Tooltip content={<ChartTooltipContent currency={currency} />} /><Bar dataKey="value" fill={CHART.expenses} radius={6} /></BarChart></ResponsiveContainer></div>
+        <ChartCard title="Account spending" compact>
+          <ResponsiveChart>
+            <BarChart data={accountSpend} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+              <XAxis dataKey="name" tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }} axisLine={false} tickLine={false} />
+              <Tooltip content={<ChartTooltipContent currency={currency} />} />
+              <Bar dataKey="value" fill={CHART.expenses} radius={6} />
+            </BarChart>
+          </ResponsiveChart>
         </ChartCard>
       </div>
     </div>

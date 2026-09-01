@@ -41,8 +41,8 @@ export function CategoriesPage() {
   }
 
   return (
-    <div className="space-y-5">
-      <PageHeader title="Categories" description="Icons and colors stay consistent across the app. Categories in use cannot be deleted." actions={<Button onClick={() => start()}>Add category</Button>} />
+    <div className="page-stack">
+      <PageHeader title="Categories" description="Icons and colors stay consistent across the app. Categories in use cannot be deleted." actions={<Button className="w-full sm:w-auto" onClick={() => start()}>Add category</Button>} />
       <div className="grid gap-3 md:grid-cols-2">
         {items.filter((item) => !item.parentId).map((item) => (
           <Card key={item.id}>

@@ -43,8 +43,8 @@ export function BudgetsPage() {
   })
 
   return (
-    <div className="space-y-5">
-      <PageHeader title="Budgets" description="Progress uses real spending in the current period. Alerts only fire from actual usage." actions={<Button onClick={() => setOpen(true)}>Add budget</Button>} />
+    <div className="page-stack">
+      <PageHeader title="Budgets" description="Progress uses real spending in the current period. Alerts only fire from actual usage." actions={<Button className="w-full sm:w-auto" onClick={() => setOpen(true)}>Add budget</Button>} />
       {(budgets.data ?? []).length === 0 ? (
         <EmptyState icon={WalletCards} title="No budgets" description="Set a monthly limit for a category or your overall spending." action={<Button onClick={() => setOpen(true)}>Create budget</Button>} />
       ) : (

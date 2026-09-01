@@ -7,7 +7,7 @@ export function Checkbox({ className, ...props }: ComponentProps<typeof Checkbox
   return (
     <CheckboxPrimitive.Root
       className={cn(
-        'flex size-4 items-center justify-center rounded border border-input bg-card data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
+        'relative flex size-4 items-center justify-center rounded border border-input bg-card before:absolute before:-inset-3 before:content-[\'\'] data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
         className,
       )}
       {...props}

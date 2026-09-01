@@ -9,7 +9,7 @@ export function ProtectedRoute() {
   if (loading) {
     return (
       <div className="flex min-h-svh items-center justify-center bg-background">
-        <div className="w-80 space-y-3">
+        <div className="w-full max-w-xs space-y-3 px-4">
           <Skeleton className="h-8 w-40" />
           <Skeleton className="h-24 w-full" />
           <Skeleton className="h-24 w-full" />

@@ -33,14 +33,14 @@ export function StatCard({
       <CardContent className={cn(compact ? 'space-y-1 px-3 py-2.5' : 'space-y-3')}>
         <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
         {formatted ? (
-          <p className={cn('font-semibold tabular tracking-tight text-foreground', compact ? 'text-xl' : 'text-[1.75rem] leading-none')}>
+          <p className={cn('money font-semibold tracking-tight text-foreground', compact ? 'text-xl' : 'text-[1.75rem] leading-none max-md:text-[1.35rem]')}>
             {formatted}
           </p>
         ) : (
           <CurrencyDisplay
             amount={value}
             currency={currency}
-            className={cn('block font-semibold tracking-tight text-foreground', compact ? 'text-xl' : 'text-[1.75rem] leading-none')}
+            className={cn('money block font-semibold tracking-tight text-foreground', compact ? 'text-xl' : 'text-[1.75rem] leading-none max-md:text-[1.35rem]')}
           />
         )}
         {change !== undefined ? (

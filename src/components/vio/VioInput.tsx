@@ -42,7 +42,7 @@ export function VioInput({
         placeholder="Ask Vio about your finances..."
         aria-label="Ask Vio about your finances"
         className={cn(
-          'max-h-28 min-h-11 flex-1 resize-none rounded-[11px] border border-border bg-input px-3 py-2.5 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
+          'max-h-28 min-h-11 min-w-0 flex-1 resize-none rounded-[11px] border border-border bg-input px-3 py-2.5 text-base outline-none focus-visible:ring-2 focus-visible:ring-ring/40 md:text-sm',
         )}
       />
       <Button

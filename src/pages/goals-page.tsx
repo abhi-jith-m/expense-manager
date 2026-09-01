@@ -31,8 +31,8 @@ export function GoalsPage() {
   })
 
   return (
-    <div className="space-y-5">
-      <PageHeader title="Goals" description="Track emergency funds and planned purchases against a target date." actions={<Button onClick={() => setOpen(true)}>Add goal</Button>} />
+    <div className="page-stack">
+      <PageHeader title="Goals" description="Track emergency funds and planned purchases against a target date." actions={<Button className="w-full sm:w-auto" onClick={() => setOpen(true)}>Add goal</Button>} />
       {(goals.data ?? []).length === 0 ? (
         <EmptyState icon={Target} title="No goals yet" description="Create a target, then update progress as you save." action={<Button onClick={() => setOpen(true)}>Create goal</Button>} />
       ) : (
@@ -90,12 +90,12 @@ export function GoalsPage() {
             }
           })}>
             <div className="space-y-1.5"><Label htmlFor="name">Name</Label><Input id="name" {...form.register('name')} /></div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="space-y-1.5"><Label>Target</Label><Input type="number" step="0.01" {...form.register('targetAmount')} /></div>
               <div className="space-y-1.5"><Label>Current</Label><Input type="number" step="0.01" {...form.register('currentAmount')} /></div>
             </div>
             <div className="space-y-1.5"><Label>Deadline</Label><Input type="date" {...form.register('deadline')} /></div>
-            <Button type="submit">Save</Button>
+            <Button type="submit" className="w-full">Save</Button>
           </form>
         </DialogContent>
       </Dialog>

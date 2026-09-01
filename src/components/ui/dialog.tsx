@@ -20,14 +20,14 @@ export function DialogContent({
       />
       <DialogPrimitive.Content
         className={cn(
-          'fixed left-1/2 top-1/2 z-[100] grid w-[calc(100%-1.5rem)] max-w-lg max-h-[90vh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-[1.25rem] border border-border bg-card-elevated p-6 duration-200',
-          'max-md:top-auto max-md:bottom-0 max-md:translate-y-0 max-md:rounded-b-none max-md:max-w-none',
+          'fixed left-1/2 top-1/2 z-[100] grid w-[min(calc(100%-2rem),32rem)] max-h-[90svh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-[1.25rem] border border-border bg-card-elevated p-5 duration-200',
+          'max-md:top-auto max-md:bottom-0 max-md:left-0 max-md:right-0 max-md:w-full max-md:max-w-none max-md:translate-x-0 max-md:translate-y-0 max-md:rounded-b-none max-md:pb-[max(1.25rem,env(safe-area-inset-bottom))]',
           className,
         )}
         {...props}
       >
         {children}
-        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-md p-1 text-muted-foreground hover:bg-muted">
+        <DialogPrimitive.Close className="absolute right-3 top-3 flex size-11 items-center justify-center rounded-[12px] text-muted-foreground hover:bg-muted">
           <X className="size-4" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>

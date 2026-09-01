@@ -37,7 +37,7 @@ export function InsightsPage() {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="page-stack">
       <PageHeader
         title="AI Financial Insights"
         description="Calculated from your transactions, then explained. Numbers never come from the model."

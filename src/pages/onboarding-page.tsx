@@ -111,7 +111,7 @@ export function OnboardingPage() {
             <Label htmlFor="accountName">First account</Label>
             <Input id="accountName" value={accountName} onChange={(event) => setAccountName(event.target.value)} />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Select value={accountType} onValueChange={setAccountType}>
               <SelectTrigger aria-label="Account type">
                 <SelectValue />

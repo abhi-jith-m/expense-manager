@@ -16,13 +16,13 @@ export function ExpensesPage() {
   const createTransaction = useCreateTransaction()
 
   return (
-    <div className="flex h-full min-h-0 flex-col">
+    <div className="page-stack">
       <PageHeader
         title="Add expense"
         description="A fast, keyboard-friendly form. Amount first, then the details that matter."
       />
-      <Card className="flex min-h-0 flex-1 flex-col">
-        <CardContent className="flex min-h-0 flex-1 flex-col p-5 sm:p-6 lg:p-8">
+      <Card>
+        <CardContent className="p-4 sm:p-6">
           <TransactionForm
             wide
             accounts={accounts.data ?? []}

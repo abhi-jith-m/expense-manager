@@ -23,7 +23,7 @@ export function InsightDetail({
 
   return (
     <Dialog open={Boolean(insight)} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-xl">
+      <DialogContent className="md:max-w-xl">
         {insight ? (
           <>
             <DialogHeader>
@@ -36,7 +36,7 @@ export function InsightDetail({
               </div>
             ) : null}
             {chartData.length > 1 ? (
-              <div className="h-48">
+              <div className="chart-frame">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData}>
                     <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />

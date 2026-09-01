@@ -35,8 +35,8 @@ export function AccountsPage() {
   })
 
   return (
-    <div className="space-y-5">
-      <PageHeader title="Accounts" description="Wallets, banks, and cards. Transfers move money without counting as income or expense." actions={<Button onClick={() => { setEditing(null); form.reset(); setOpen(true) }}>Add account</Button>} />
+    <div className="page-stack">
+      <PageHeader title="Accounts" description="Wallets, banks, and cards. Transfers move money without counting as income or expense." actions={<Button className="w-full sm:w-auto" onClick={() => { setEditing(null); form.reset(); setOpen(true) }}>Add account</Button>} />
       {(accounts.data ?? []).length === 0 ? (
         <EmptyState icon={Landmark} title="No accounts yet" description="Create at least one account before adding transactions." action={<Button onClick={() => setOpen(true)}>Add account</Button>} />
       ) : (

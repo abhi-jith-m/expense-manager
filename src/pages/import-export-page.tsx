@@ -92,7 +92,7 @@ export function ImportExportPage() {
   const exportRows = applyTransactionFilters(transactions.data ?? [], exportFilters)
 
   return (
-    <div className="space-y-6">
+    <div className="page-stack">
       <PageHeader title="Import / Export" description="Guided CSV, Excel, and JSON import with column mapping and validation." />
       <Card>
         <CardHeader>
@@ -111,7 +111,7 @@ export function ImportExportPage() {
           {step === 1 ? (
             <div className="grid gap-3">
               {IMPORT_FIELDS.map((field) => (
-                <div key={field.key} className="grid grid-cols-2 items-center gap-3">
+                <div key={field.key} className="space-y-1.5">
                   <Label>{field.label}{field.required ? ' *' : ''}</Label>
                   <Select value={mapping[field.key] || 'none'} onValueChange={(value) => setMapping((current) => ({ ...current, [field.key]: value === 'none' ? '' : value }))}>
                     <SelectTrigger><SelectValue placeholder="Ignore" /></SelectTrigger>
@@ -122,14 +122,25 @@ export function ImportExportPage() {
                   </Select>
                 </div>
               ))}
-              <Button onClick={() => setStep(2)}>Preview</Button>
+              <Button className="w-full" onClick={() => setStep(2)}>Preview</Button>
             </div>
           ) : null}
           {step === 2 ? (
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">{valid.length} ready · {invalid.length} with errors</p>
-              <div className="max-h-72 overflow-auto rounded-lg border border-border">
-                <table className="w-full text-sm">
+              <div className="space-y-2 md:hidden">
+                {preview.slice(0, 40).map((row) => (
+                  <div key={row.row} className="rounded-xl border border-border px-3 py-3 text-sm">
+                    <div className="flex min-w-0 items-center justify-between gap-3">
+                      <p className="truncate font-medium">{row.transaction.merchant || `Row ${row.row}`}</p>
+                      <span className="money shrink-0">{row.transaction.amount}</span>
+                    </div>
+                    <p className="truncate text-xs text-muted-foreground">{row.transaction.date} · {row.errors[0]?.message ?? 'Ready'}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="hidden max-h-72 overflow-x-auto rounded-lg border border-border md:block">
+                <table className="w-full min-w-[520px] text-sm">
                   <thead><tr className="bg-muted text-left"><th className="p-2">Row</th><th className="p-2">Date</th><th className="p-2">Amount</th><th className="p-2">Merchant</th><th className="p-2">Status</th></tr></thead>
                   <tbody>
                     {preview.slice(0, 40).map((row) => (
@@ -144,9 +155,9 @@ export function ImportExportPage() {
                   </tbody>
                 </table>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
-                <Button onClick={() => void confirmImport()} disabled={!valid.length}>Import {valid.length} records</Button>
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="outline" className="w-full" onClick={() => setStep(1)}>Back</Button>
+                <Button className="w-full" onClick={() => void confirmImport()} disabled={!valid.length}>Import {valid.length}</Button>
               </div>
             </div>
           ) : null}
@@ -161,9 +172,9 @@ export function ImportExportPage() {
 
       <Card>
         <CardHeader><CardTitle>Export transactions</CardTitle></CardHeader>
-        <CardContent className="flex flex-wrap gap-3">
+        <CardContent className="grid gap-3 sm:flex sm:flex-wrap">
           <Select value={exportFilters.type ?? 'all'} onValueChange={(value) => setExportFilters((current) => ({ ...current, type: value as TransactionFilters['type'] }))}>
-            <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="w-full sm:w-40"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All types</SelectItem>
               <SelectItem value="expense">Expenses</SelectItem>

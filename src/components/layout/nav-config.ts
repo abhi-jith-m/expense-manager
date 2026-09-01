@@ -2,6 +2,7 @@ import {
   ArrowLeftRight,
   Bell,
   ChartNoAxesCombined,
+  CircleEllipsis,
   FileChartColumn,
   Landmark,
   LayoutDashboard,
@@ -44,4 +45,13 @@ export const NAV_ITEMS: NavItem[] = [
   { to: '/profile', label: 'Profile', icon: User },
 ]
 
-export const MOBILE_PRIMARY = NAV_ITEMS.filter((item) => item.primary).slice(0, 4)
+export const MOBILE_TABS: NavItem[] = [
+  { to: '/', label: 'Home', icon: LayoutDashboard },
+  { to: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
+  { to: '/analytics', label: 'Analytics', icon: ChartNoAxesCombined },
+  { to: '/budgets', label: 'Budgets', icon: WalletCards },
+]
+
+export const MORE_ICON = CircleEllipsis
+
+export const MOBILE_PRIMARY = MOBILE_TABS
