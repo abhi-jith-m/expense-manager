@@ -12,7 +12,7 @@ export function CollapsibleSection({
 }) {
   return (
     <details className="group rounded-xl border border-border bg-card" open={defaultOpen || undefined}>
-      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-3.5 text-[15px] font-medium [&::-webkit-details-marker]:hidden">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-3.5 text-ui-md font-semibold [&::-webkit-details-marker]:hidden">
         {title}
         <ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
       </summary>

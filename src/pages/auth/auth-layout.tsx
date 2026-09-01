@@ -22,10 +22,10 @@ export function AuthLayout({
         />
         <div className="relative">
           <p className="text-sm font-semibold tracking-tight">Aureum</p>
-          <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-sidebar-muted">Midnight Violet</p>
+          <p className="text-label mt-1">Midnight Violet</p>
         </div>
         <div className="relative max-w-md space-y-4">
-          <h2 className="text-4xl font-medium leading-[1.15] tracking-tight">
+          <h2 className="text-[clamp(1.5rem,2.4vw,2.25rem)] font-semibold leading-[1.2] tracking-tight">
             See your money clearly, without the noise.
           </h2>
           <p className="text-sm leading-relaxed text-sidebar-muted">
@@ -37,7 +37,7 @@ export function AuthLayout({
       <div className="flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-md">
           <p className="mb-5 text-sm font-semibold lg:hidden">Aureum</p>
-          <h1 className="text-2xl font-medium tracking-tight">{title}</h1>
+          <h1 className="text-page">{title}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
           <div className="mt-5">{children}</div>
         </div>

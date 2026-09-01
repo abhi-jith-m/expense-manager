@@ -20,7 +20,7 @@ export function MobileBottomNav() {
             end={item.to === '/'}
             className={({ isActive }) =>
               cn(
-                'flex h-12 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-[10px] text-muted-foreground',
+                'flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-ui-xs leading-none text-muted-foreground [&>span]:max-w-full [&>span]:truncate [&>span]:whitespace-nowrap',
                 isActive && 'text-foreground',
               )
             }
@@ -28,7 +28,7 @@ export function MobileBottomNav() {
             {({ isActive }) => (
               <>
                 <item.icon className={cn('size-5', isActive && 'text-primary')} />
-                {item.label}
+                <span>{item.label}</span>
               </>
             )}
           </NavLink>
@@ -37,7 +37,7 @@ export function MobileBottomNav() {
           type="button"
           onClick={openMenu}
           className={cn(
-            'flex h-12 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-[10px] text-muted-foreground',
+            'flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-xl px-1 text-ui-xs leading-none text-muted-foreground',
             (open || !onPrimary) && 'text-foreground',
           )}
         >

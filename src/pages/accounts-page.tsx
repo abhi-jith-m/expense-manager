@@ -44,12 +44,12 @@ export function AccountsPage() {
           {(accounts.data ?? []).map((account) => (
             <Card key={account.id}>
               <CardContent className="space-y-3">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="font-medium">{account.name}</p>
+                <div className="flex min-w-0 items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate font-medium">{account.name}</p>
                     <p className="text-xs capitalize text-muted-foreground">{account.type} · {account.status}</p>
                   </div>
-                  <CurrencyDisplay amount={accountBalance(account, transactions.data ?? [])} currency={account.currency} className="text-lg" />
+                  <CurrencyDisplay amount={accountBalance(account, transactions.data ?? [])} currency={account.currency} className="max-w-[48%] shrink-0 text-lg font-semibold" />
                 </div>
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" onClick={() => { setEditing(account); form.reset(account); setOpen(true) }}>Edit</Button>

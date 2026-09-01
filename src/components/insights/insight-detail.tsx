@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { ChartTooltipContent } from '@/components/shared/chart-tooltip'
 import { useInsightFeedback } from '@/hooks/use-insights'
 import type { FinancialInsight } from '@/lib/insights-api'
+import { CHART_TICK } from '@/lib/palette'
 
 export function InsightDetail({
   insight,
@@ -39,8 +40,8 @@ export function InsightDetail({
               <div className="chart-frame">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData}>
-                    <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
+                    <XAxis dataKey="name" tick={CHART_TICK} axisLine={false} tickLine={false} />
+                    <YAxis tick={CHART_TICK} axisLine={false} tickLine={false} />
                     <Tooltip content={<ChartTooltipContent currency={currency} />} />
                     <Bar dataKey="value" fill="var(--primary)" radius={6} />
                   </BarChart>
@@ -50,7 +51,7 @@ export function InsightDetail({
             <dl className="grid grid-cols-2 gap-2 text-sm">
               {Object.entries(insight.metrics).map(([key, value]) => (
                 <div key={key} className="rounded-xl bg-muted/40 px-3 py-2">
-                  <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">{key.split('.').slice(-1)[0]}</dt>
+                  <dt className="text-label">{key.split('.').slice(-1)[0]}</dt>
                   <dd className="tabular font-medium">{typeof value === 'number' ? value.toLocaleString() : String(value)}</dd>
                 </div>
               ))}

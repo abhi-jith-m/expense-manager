@@ -56,7 +56,7 @@ export function InsightsPage() {
         <>
           <Card>
             <CardContent className="space-y-2">
-              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Overview</p>
+              <p className="text-label">Overview</p>
               <p className="text-lg font-medium tracking-tight">{insights.data.summary}</p>
               <p className="text-sm text-muted-foreground">{insights.data.financial_health_summary}</p>
               {insights.data.used_fallback ? (
@@ -86,7 +86,7 @@ export function InsightsPage() {
                   </div>
                   {supporting.length ? (
                     <div className="space-y-2">
-                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Supporting</p>
+                      <p className="text-label">Supporting</p>
                       <div className="grid gap-3 lg:grid-cols-2">
                         {supporting.map((item) => (
                           <InsightCard key={item.id} insight={item} onSelect={setSelected} />

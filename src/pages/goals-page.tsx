@@ -44,18 +44,25 @@ export function GoalsPage() {
             return (
               <Card key={goal.id}>
                 <CardContent className="space-y-3">
-                  <div className="flex items-center gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
                     <CategoryIcon name={goal.icon} color={goal.color} />
-                    <div className="flex-1">
-                      <p className="font-medium">{goal.name}</p>
-                      <p className="text-xs text-muted-foreground">{goal.deadline ? `Due ${goal.deadline}` : 'No deadline'}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium">{goal.name}</p>
+                      <p className="truncate text-xs text-muted-foreground">{goal.deadline ? `Due ${goal.deadline}` : 'No deadline'}</p>
                     </div>
-                    <CurrencyDisplay amount={goal.currentAmount} currency={user?.currency ?? 'USD'} />
+                    <CurrencyDisplay amount={goal.currentAmount} currency={user?.currency ?? 'USD'} className="max-w-[46%] shrink-0 text-sm font-medium" />
                   </div>
                   <Progress value={percent} />
                   <p className="text-xs text-muted-foreground">
-                    {percent.toFixed(0)}% · {left.toFixed(2)} remaining
-                    {monthly !== null ? ` · ${monthly.toFixed(2)} / month to stay on track` : ''}
+                    <span className="money">{percent.toFixed(0)}%</span>
+                    {' · '}
+                    remaining <CurrencyDisplay amount={left} currency={user?.currency ?? 'USD'} className="inline text-xs" />
+                    {monthly !== null ? (
+                      <>
+                        {' · '}
+                        <CurrencyDisplay amount={monthly} currency={user?.currency ?? 'USD'} className="inline text-xs" /> / month
+                      </>
+                    ) : null}
                   </p>
                   <div className="flex gap-2">
                     <Input

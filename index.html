@@ -8,11 +8,26 @@
     <script>
       (function () {
         try {
-          var stored = localStorage.getItem('theme')
+          var appearance = {}
+          try { appearance = JSON.parse(localStorage.getItem('aureum-appearance') || '{}') } catch (e) {}
+          var stored = appearance.theme || localStorage.getItem('theme')
           var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-          var dark = stored === 'dark' || (stored !== 'light' && (stored === 'system' ? prefersDark : true))
+          var dark = stored === 'dark' || (stored === 'system' ? prefersDark : stored !== 'light' && (stored ? stored === 'dark' : prefersDark))
+          if (stored === 'light') dark = false
+          if (stored === 'system') dark = prefersDark
           document.documentElement.classList.toggle('dark', dark)
           document.documentElement.style.colorScheme = dark ? 'dark' : 'light'
+          var root = document.documentElement
+          if (appearance.accent) root.dataset.accent = appearance.accent
+          if (appearance.density) root.dataset.density = appearance.density
+          if (appearance.typography) root.dataset.typography = appearance.typography
+          if (appearance.cornerStyle) root.dataset.corners = appearance.cornerStyle
+          if (appearance.interfaceStyle) root.dataset.style = appearance.interfaceStyle
+          if (appearance.motion) root.dataset.motion = appearance.motion
+          var scales = { small: '0.92', default: '1', large: '1.08' }
+          var radii = { sharp: '0.5rem', soft: '0.75rem', rounded: '1.125rem' }
+          root.style.setProperty('--text-scale', scales[appearance.textSize] || '1')
+          if (appearance.cornerStyle && radii[appearance.cornerStyle]) root.style.setProperty('--radius', radii[appearance.cornerStyle])
           var themeColor = document.querySelector('meta[name="theme-color"]')
           if (themeColor) themeColor.setAttribute('content', dark ? '#08070D' : '#F7F6FB')
         } catch (e) {}
@@ -22,7 +37,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <title>Aureum — Expense Tracker</title>

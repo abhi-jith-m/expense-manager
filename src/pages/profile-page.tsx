@@ -45,7 +45,7 @@ export function ProfilePage() {
                   }
                 }}
               />
-              <p className="text-xs text-muted-foreground">{user.email}</p>
+              <p className="break-all text-xs text-muted-foreground">{user.email}</p>
             </div>
           </div>
           <div className="space-y-1.5">

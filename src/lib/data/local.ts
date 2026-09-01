@@ -92,7 +92,7 @@ function emptyStore(userId: string, email: string, fullName: string): UserStore 
       avatarUrl: null,
       currency: 'USD',
       dateFormat: 'MMM d, yyyy',
-      theme: 'dark',
+      theme: 'system',
       onboardingCompleted: false,
       notificationPreferences: { ...DEFAULT_NOTIFICATION_PREFERENCES },
       createdAt: now,

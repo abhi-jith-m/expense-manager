@@ -10,11 +10,11 @@ export function VioMetricCard({ metric, currency }: { metric: ChatMetric; curren
     metric.unit === 'percent' ? `${metric.value.toFixed(0)}%` : formatMoney(metric.value, currency)
   return (
     <div className="rounded-xl border border-border bg-[var(--vio-surface)] px-3 py-2">
-      <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">{metric.label}</p>
+      <p className="text-label">{metric.label}</p>
       <p className="money mt-1 text-lg font-semibold tracking-tight">{formatted}</p>
       {metric.change != null ? (
-        <p className={cn('mt-0.5 flex items-center gap-1 text-xs', rising && 'text-expense', falling && 'text-income')}>
-          {rising ? <ArrowUpRight className="size-3" /> : <ArrowDownRight className="size-3" />}
+        <p className={cn('money mt-0.5 flex items-center gap-1 text-ui-xs', rising && 'text-expense', falling && 'text-income')}>
+          {rising ? <ArrowUpRight className="size-4" /> : <ArrowDownRight className="size-4" />}
           {Math.abs(metric.change).toFixed(1)}%
           {metric.previous != null ? (
             <span className="text-muted-foreground">

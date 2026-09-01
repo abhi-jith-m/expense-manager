@@ -18,8 +18,8 @@ export function VioMessage({
   if (message.role === 'user') {
     return (
       <div className="flex flex-col items-end gap-1">
-        <p className="text-[11px] text-muted-foreground">You</p>
-        <div className="max-w-[85%] rounded-2xl bg-primary/12 px-3 py-2 text-sm text-foreground">
+        <p className="text-ui-xs text-muted-foreground">You</p>
+        <div className="max-w-[85%] rounded-[var(--radius)] bg-primary/12 px-3 py-2 text-sm leading-relaxed text-foreground [overflow-wrap:anywhere]">
           {message.content}
         </div>
       </div>
@@ -32,8 +32,8 @@ export function VioMessage({
         <Sparkles className="size-3.5" />
       </span>
       <div className="min-w-0 flex-1 space-y-2">
-        <p className="text-[11px] font-medium text-muted-foreground">Vio</p>
-        <p className="text-sm leading-relaxed">{message.content}</p>
+        <p className="text-ui-xs font-medium text-muted-foreground">Vio</p>
+        <p className="min-w-0 text-sm leading-relaxed">{message.content}</p>
         {message.metrics.length ? (
           <div className="grid grid-cols-2 gap-2">
             {message.metrics.map((metric) => (
@@ -47,13 +47,13 @@ export function VioMessage({
         {message.chart ? <VioChart chart={message.chart} currency={currency} /> : null}
         {message.related_transactions.length ? (
           <div className="space-y-1.5">
-            <p className="text-[11px] text-muted-foreground">Related transactions</p>
+            <p className="text-ui-xs text-muted-foreground">Related transactions</p>
             {message.related_transactions.map((item) => (
               <VioTransactionCard key={item.id} transaction={item} currency={currency} />
             ))}
           </div>
         ) : null}
-        {message.grounding ? <p className="text-[11px] text-muted-foreground">{message.grounding}</p> : null}
+        {message.grounding ? <p className="text-ui-xs text-muted-foreground">{message.grounding}</p> : null}
         {onFollowUp && message.follow_ups.length ? (
           <VioSuggestions suggestions={message.follow_ups} onSelect={onFollowUp} className="pt-1" />
         ) : null}

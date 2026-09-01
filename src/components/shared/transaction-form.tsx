@@ -242,7 +242,7 @@ export function TransactionForm({
         />
       </div>
       <div className={wide ? 'flex justify-end' : undefined}>
-        <Button type="submit" disabled={submitting} className={wide ? 'h-11 w-full md:w-auto md:min-w-40' : 'h-11 w-full sm:w-auto'}>
+        <Button type="submit" disabled={submitting} className={wide ? 'min-h-11 w-full md:w-auto md:min-w-40' : 'min-h-11 w-full sm:w-auto'}>
           {submitting ? 'Saving…' : initial ? 'Save changes' : 'Save transaction'}
         </Button>
       </div>

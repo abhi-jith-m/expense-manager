@@ -35,9 +35,9 @@ export function TransactionRow({
       <CategoryIcon name={icon ?? 'CircleEllipsis'} color={color} size="sm" className="shrink-0" />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">{merchant}</p>
-        <p className="truncate text-xs text-muted-foreground">{meta}</p>
+        <p className="truncate text-ui-sm text-muted-foreground">{meta}</p>
       </div>
-      <CurrencyDisplay amount={amount} currency={currency} tone={tone} className="text-sm font-medium" />
+      <CurrencyDisplay amount={amount} currency={currency} tone={tone} className="max-w-[46%] shrink-0 text-sm font-medium" />
     </>
   )
   if (onClick) {

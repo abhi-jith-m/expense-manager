@@ -34,7 +34,7 @@ export function VioHistory({
     <div className="max-h-56 space-y-3 overflow-y-auto border-b border-border px-3 py-2">
       {[...groups.entries()].map(([label, rows]) => (
         <div key={label}>
-          <p className="px-1 pb-1 text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+          <p className="text-label px-1 pb-1">{label}</p>
           <div className="space-y-0.5">
             {rows.map((item) => (
               <div

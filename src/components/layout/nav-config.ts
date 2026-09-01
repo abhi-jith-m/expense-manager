@@ -47,7 +47,7 @@ export const NAV_ITEMS: NavItem[] = [
 
 export const MOBILE_TABS: NavItem[] = [
   { to: '/', label: 'Home', icon: LayoutDashboard },
-  { to: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
+  { to: '/transactions', label: 'Activity', icon: ArrowLeftRight },
   { to: '/analytics', label: 'Analytics', icon: ChartNoAxesCombined },
   { to: '/budgets', label: 'Budgets', icon: WalletCards },
 ]

@@ -15,7 +15,7 @@ export function VioTransactionCard({
   return (
     <button
       type="button"
-      className="flex w-full items-center justify-between rounded-xl border border-border bg-card px-3 py-2 text-left transition-colors duration-200 hover:bg-card-hover"
+      className="flex w-full min-w-0 items-center justify-between gap-3 rounded-xl border border-border bg-card px-3 py-2 text-left transition-colors duration-200 hover:bg-card-hover"
       onClick={() => {
         closeVio()
         navigate(`/transactions?edit=${transaction.id}`)
@@ -23,11 +23,11 @@ export function VioTransactionCard({
     >
       <div className="min-w-0">
         <p className="truncate text-sm font-medium">{transaction.merchant}</p>
-        <p className="text-[11px] text-muted-foreground">
+        <p className="truncate text-ui-xs text-muted-foreground">
           {transaction.category ?? 'Expense'} · {transaction.date}
         </p>
       </div>
-      <p className="tabular text-sm font-medium text-expense">{formatMoney(transaction.amount, currency)}</p>
+      <p className="money max-w-[46%] shrink-0 text-sm font-medium text-expense">{formatMoney(transaction.amount, currency)}</p>
     </button>
   )
 }

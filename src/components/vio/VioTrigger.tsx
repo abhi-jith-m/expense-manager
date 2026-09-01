@@ -13,9 +13,7 @@ export function VioTrigger() {
       aria-expanded={open}
       onClick={toggleVio}
       className={cn(
-        'relative inline-flex size-11 items-center justify-center rounded-[12px] border text-sm font-medium transition-all duration-200 sm:h-11 sm:w-auto sm:gap-1.5 sm:px-3',
-        'bg-[#F3EEFF] border-[#DDD0FF] text-[#6D28D9]',
-        'dark:bg-[rgba(139,92,246,0.12)] dark:border-[rgba(139,92,246,0.25)] dark:text-[#C4B5FD]',
+        'relative inline-flex size-11 items-center justify-center rounded-[var(--radius-md)] border border-primary/25 bg-primary/12 text-sm font-medium text-primary transition-all duration-200 sm:h-11 sm:w-auto sm:gap-1.5 sm:px-3',
         open && 'ring-2 ring-primary/20',
       )}
     >

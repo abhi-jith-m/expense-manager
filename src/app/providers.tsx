@@ -1,20 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ThemeProvider, useTheme } from 'next-themes'
-import { useEffect, useState, type ReactNode } from 'react'
-import { AuthProvider, useAuth } from '@/contexts/auth-context'
+import { ThemeProvider } from 'next-themes'
+import { useState, type ReactNode } from 'react'
+import { AuthProvider } from '@/contexts/auth-context'
+import { AppearanceProvider } from '@/contexts/appearance-context'
 import { VioProvider } from '@/contexts/vio-context'
 import { TooltipProvider } from '@/components/ui/tooltip'
-
-function ThemeSync() {
-  const { user } = useAuth()
-  const { setTheme } = useTheme()
-
-  useEffect(() => {
-    if (user?.theme) setTheme(user.theme)
-  }, [setTheme, user?.theme])
-
-  return null
-}
 
 export function AppProviders({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
@@ -32,12 +22,13 @@ export function AppProviders({ children }: { children: ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
         <AuthProvider>
-          <ThemeSync />
-          <VioProvider>
-            <TooltipProvider>{children}</TooltipProvider>
-          </VioProvider>
+          <AppearanceProvider>
+            <VioProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </VioProvider>
+          </AppearanceProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

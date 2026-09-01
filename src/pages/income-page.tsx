@@ -17,6 +17,7 @@ import { computeTotals } from '@/lib/money'
 import { ChartTooltipContent } from '@/components/shared/chart-tooltip'
 import { toUserMessage } from '@/lib/data/errors'
 import { toCreateInput } from '@/lib/transaction-input'
+import { CHART_TICK } from '@/lib/palette'
 
 export function IncomePage() {
   const { user } = useAuth()
@@ -46,15 +47,15 @@ export function IncomePage() {
       <Card>
         <CardContent className="grid grid-cols-3 gap-2">
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Income</p>
+            <p className="text-label">Income</p>
             <CurrencyDisplay amount={totals.income} currency={user?.currency ?? 'USD'} className="block text-lg font-semibold" />
           </div>
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Sources</p>
+            <p className="text-label">Sources</p>
             <p className="text-lg font-semibold">{bySource.length}</p>
           </div>
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Entries</p>
+            <p className="text-label">Entries</p>
             <p className="text-lg font-semibold">{income.length}</p>
           </div>
         </CardContent>
@@ -62,8 +63,8 @@ export function IncomePage() {
       <ChartCard title="Income by source" compact>
         <ResponsiveChart>
           <BarChart data={bySource} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-            <XAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
-            <YAxis width={36} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
+            <XAxis dataKey="name" tick={CHART_TICK} axisLine={false} tickLine={false} />
+            <YAxis width={36} tick={CHART_TICK} axisLine={false} tickLine={false} />
             <Tooltip content={<ChartTooltipContent currency={user?.currency ?? 'USD'} />} />
             <Bar dataKey="value" fill="var(--chart-income)" radius={6} />
           </BarChart>

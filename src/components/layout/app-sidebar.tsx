@@ -19,8 +19,8 @@ export function AppSidebar() {
   return (
     <aside className="glass-panel hidden h-svh w-[248px] shrink-0 flex-col border-r border-sidebar-border text-sidebar-foreground lg:flex">
       <div className="px-5 py-6">
-        <p className="text-[15px] font-semibold tracking-tight">Aureum</p>
-        <p className="mt-0.5 text-[11px] uppercase tracking-[0.14em] text-sidebar-muted">Finance</p>
+        <p className="text-ui-md font-semibold tracking-tight">Aureum</p>
+        <p className="text-label mt-0.5">Finance</p>
       </div>
       <nav className="flex-1 space-y-0.5 overflow-y-auto px-3">
         {NAV_ITEMS.map((item) => (
@@ -30,7 +30,7 @@ export function AppSidebar() {
             end={item.to === '/'}
             className={({ isActive }) =>
               cn(
-                'group flex items-center gap-3 rounded-xl px-3 py-2 text-[13px] text-sidebar-muted transition-colors duration-200 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground',
+                'group flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-sidebar-muted transition-colors duration-200 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground',
                 isActive && 'bg-sidebar-accent font-medium text-sidebar-foreground',
               )
             }
@@ -46,7 +46,7 @@ export function AppSidebar() {
       </nav>
       <div className="space-y-3 border-t border-sidebar-border p-4">
         {isLocalBackend() ? (
-          <p className="rounded-xl bg-sidebar-accent px-2.5 py-2 text-[11px] leading-relaxed text-sidebar-muted">
+          <p className="rounded-xl bg-sidebar-accent px-2.5 py-2 text-ui-xs leading-relaxed text-sidebar-muted">
             Local data mode. Add Supabase to sync across devices.
           </p>
         ) : null}

@@ -15,29 +15,29 @@ export function VioHeader({
   return (
     <div className="flex items-start justify-between gap-3 border-b border-border px-4 py-3">
       <div className="flex min-w-0 items-start gap-2.5">
-        <span className="flex size-8 items-center justify-center rounded-[10px] bg-primary/12 text-primary">
+        <span className="flex size-8 items-center justify-center rounded-[var(--radius-md)] bg-primary/12 text-primary">
           <Sparkles className="size-4" />
         </span>
         <div className="min-w-0">
           <p className="text-sm font-semibold">Vio</p>
-          <p className="text-[11px] text-muted-foreground">Your Personal Finance Copilot</p>
+          <p className="text-ui-xs text-muted-foreground">Your Personal Finance Copilot</p>
         </div>
       </div>
       <div className="flex items-center gap-0.5">
         <Button
           variant="ghost"
           size="icon"
-          className="size-8"
+          className="size-11"
           aria-label="Conversation history"
           aria-pressed={historyOpen}
           onClick={onToggleHistory}
         >
           <History className="size-4" />
         </Button>
-        <Button variant="ghost" size="icon" className="size-8" aria-label="New Vio conversation" onClick={onNew}>
+        <Button variant="ghost" size="icon" className="size-11" aria-label="New Vio conversation" onClick={onNew}>
           <Plus className="size-4" />
         </Button>
-        <Button variant="ghost" size="icon" className="size-8" aria-label="Close Vio" onClick={onClose}>
+        <Button variant="ghost" size="icon" className="size-11" aria-label="Close Vio" onClick={onClose}>
           <X className="size-4" />
         </Button>
       </div>

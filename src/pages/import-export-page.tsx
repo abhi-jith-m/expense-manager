@@ -133,7 +133,7 @@ export function ImportExportPage() {
                   <div key={row.row} className="rounded-xl border border-border px-3 py-3 text-sm">
                     <div className="flex min-w-0 items-center justify-between gap-3">
                       <p className="truncate font-medium">{row.transaction.merchant || `Row ${row.row}`}</p>
-                      <span className="money shrink-0">{row.transaction.amount}</span>
+                      <span className="money max-w-[46%] shrink-0 text-right">{row.transaction.amount}</span>
                     </div>
                     <p className="truncate text-xs text-muted-foreground">{row.transaction.date} · {row.errors[0]?.message ?? 'Ready'}</p>
                   </div>
@@ -146,9 +146,9 @@ export function ImportExportPage() {
                     {preview.slice(0, 40).map((row) => (
                       <tr key={row.row} className="border-t border-border">
                         <td className="p-2">{row.row}</td>
-                        <td className="p-2">{row.transaction.date}</td>
-                        <td className="p-2">{row.transaction.amount}</td>
-                        <td className="p-2">{row.transaction.merchant}</td>
+                        <td className="money p-2">{row.transaction.date}</td>
+                        <td className="money p-2">{row.transaction.amount}</td>
+                        <td className="max-w-[12rem] truncate p-2">{row.transaction.merchant}</td>
                         <td className="p-2">{row.errors[0]?.message ?? 'Ready'}</td>
                       </tr>
                     ))}

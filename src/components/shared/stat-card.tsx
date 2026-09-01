@@ -31,29 +31,29 @@ export function StatCard({
   return (
     <Card className={cn('min-w-0 transition-colors duration-200', compact && 'bg-card')}>
       <CardContent className={cn(compact ? 'space-y-1 px-3 py-2.5' : 'space-y-3')}>
-        <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
+        <p className="text-label">{label}</p>
         {formatted ? (
-          <p className={cn('money font-semibold tracking-tight text-foreground', compact ? 'text-xl' : 'text-[1.75rem] leading-none max-md:text-[1.35rem]')}>
+          <p className={cn('money tracking-tight text-foreground', compact ? 'text-xl font-semibold' : 'text-kpi')}>
             {formatted}
           </p>
         ) : (
           <CurrencyDisplay
             amount={value}
             currency={currency}
-            className={cn('money block font-semibold tracking-tight text-foreground', compact ? 'text-xl' : 'text-[1.75rem] leading-none max-md:text-[1.35rem]')}
+            className={cn('block tracking-tight text-foreground', compact ? 'text-xl font-semibold' : 'text-kpi')}
           />
         )}
         {change !== undefined ? (
           <p
             className={cn(
-              'flex items-center gap-1 truncate text-[11px]',
+              'flex items-center gap-1 truncate text-ui-xs',
               positive && 'text-income',
               negative && 'text-expense',
               !positive && !negative && 'text-muted-foreground',
             )}
           >
-            <Trend className="size-3 shrink-0" />
-            <span className="truncate">
+            <Trend className="size-4 shrink-0" />
+            <span className="money truncate">
               {change === null ? 'No prior period' : `${Math.abs(change).toFixed(1)}% ${comparison ?? ''}`}
             </span>
           </p>

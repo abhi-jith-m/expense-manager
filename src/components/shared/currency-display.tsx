@@ -18,7 +18,7 @@ export function CurrencyDisplay({
   return (
     <span
       className={cn(
-        'money shrink-0 text-right',
+        'money min-w-0 max-w-full text-right',
         resolved === 'income' && 'text-income',
         resolved === 'expense' && 'text-expense',
         resolved === 'transfer' && 'text-info',

@@ -65,10 +65,10 @@ export function OnboardingPage() {
 
   return (
     <div className="mx-auto min-h-svh max-w-xl px-4 py-6">
-      <p className="text-xs uppercase tracking-wide text-muted-foreground">
+      <p className="text-label">
         Step {step + 1} of {steps.length}
       </p>
-      <h1 className="mt-2 text-2xl font-semibold tracking-tight">{steps[step]}</h1>
+      <h1 className="text-page mt-2">{steps[step]}</h1>
 
       {step === 0 ? (
         <div className="mt-6 space-y-4">

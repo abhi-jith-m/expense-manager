@@ -61,16 +61,16 @@ export function BudgetsPage() {
             return (
               <Card key={budget.id}>
                 <CardContent className="space-y-2">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="font-medium">{budget.name}</p>
+                  <div className="flex min-w-0 items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">{budget.name}</p>
                       <p className="text-xs text-muted-foreground">{budget.period} · alert at {budget.alertThreshold}%</p>
                     </div>
-                    <CurrencyDisplay amount={left} currency={user?.currency ?? 'USD'} tone={over ? 'expense' : 'neutral'} />
+                    <CurrencyDisplay amount={left} currency={user?.currency ?? 'USD'} tone={over ? 'expense' : 'neutral'} className="max-w-[46%] shrink-0 text-sm font-medium" />
                   </div>
                   <Progress value={percent} tone={over ? 'danger' : near ? 'warning' : 'default'} />
                   <p className="text-xs text-muted-foreground">
-                    {percent.toFixed(0)}% used · projected {projected.toFixed(0)} this period
+                    <span className="money">{percent.toFixed(0)}%</span> used · projected <span className="money">{projected.toFixed(0)}</span> this period
                     {over ? ' · Over limit' : near ? ' · Approaching limit' : ''}
                   </p>
                   <Button size="sm" variant="ghost" onClick={() => void client.deleteBudget(budget.id).then(() => { toast.success('Budget removed'); invalidate() })}>

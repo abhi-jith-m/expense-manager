@@ -21,7 +21,7 @@ import { defaultMonthRange, daysInRange, previousRange } from '@/lib/dates'
 import { formatMoney } from '@/lib/currency'
 import { DashboardInsights } from '@/components/insights/dashboard-insights'
 import { ChartTooltipContent } from '@/components/shared/chart-tooltip'
-import { CHART } from '@/lib/palette'
+import { CHART, CHART_TICK } from '@/lib/palette'
 import { cn } from '@/lib/utils'
 import type { DateRange } from '@/types'
 
@@ -36,7 +36,7 @@ function ChangeHint({
   const up = value > 0
   const good = invert ? !up : up
   return (
-    <span className={cn('text-[11px]', good ? 'text-income' : value === 0 ? 'text-muted-foreground' : 'text-expense')}>
+    <span className={cn('money text-ui-xs', good ? 'text-income' : value === 0 ? 'text-muted-foreground' : 'text-expense')}>
       {up ? '+' : ''}
       {value.toFixed(1)}%
     </span>
@@ -157,7 +157,7 @@ export function DashboardPage() {
   return (
     <div className="page-stack">
       <div className="flex items-center gap-2">
-        <h1 className="min-w-0 flex-1 truncate text-xl font-medium tracking-tight">{firstName}</h1>
+        <h1 className="text-page min-w-0 flex-1 truncate">{firstName}</h1>
         <div className="min-w-0 max-w-[9.5rem] shrink-0 sm:max-w-none">
           <DateRangePicker value={range} onChange={setRange} />
         </div>
@@ -180,24 +180,24 @@ export function DashboardPage() {
       <Card>
         <CardContent className="space-y-3">
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Total balance</p>
-            <CurrencyDisplay amount={balance} currency={currency} className="mt-0.5 block text-[1.75rem] font-semibold leading-none tracking-tight" />
+            <p className="text-label">Total balance</p>
+            <CurrencyDisplay amount={balance} currency={currency} className="text-kpi mt-0.5 block" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="min-w-0">
-              <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Income</p>
+              <p className="text-label">Income</p>
               <CurrencyDisplay amount={totals.income} currency={currency} className="block text-base font-semibold" />
               <ChangeHint value={incomeChange} />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Expenses</p>
+              <p className="text-label">Expenses</p>
               <CurrencyDisplay amount={totals.expenses} currency={currency} className="block text-base font-semibold" />
               <ChangeHint value={expenseChange} invert />
             </div>
           </div>
           <div className="flex items-end justify-between gap-3 border-t border-border pt-2.5">
             <div className="min-w-0">
-              <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Savings</p>
+              <p className="text-label">Savings</p>
               <CurrencyDisplay amount={totals.savings} currency={currency} className="block text-base font-semibold" />
             </div>
             <ChangeHint value={savingsChange} />
@@ -212,11 +212,11 @@ export function DashboardPage() {
             <XAxis
               dataKey="label"
               interval="preserveStartEnd"
-              tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
+              tick={CHART_TICK}
               axisLine={false}
               tickLine={false}
             />
-            <YAxis width={32} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
+            <YAxis width={36} tick={CHART_TICK} axisLine={false} tickLine={false} />
             <Tooltip cursor={{ stroke: 'var(--border)' }} content={<ChartTooltipContent currency={currency} />} />
             <Area type="monotone" dataKey="expenses" stroke={CHART.expenses} fill={CHART.expenses} fillOpacity={0.14} />
           </AreaChart>
@@ -242,7 +242,7 @@ export function DashboardPage() {
                     <span className="size-2 shrink-0 rounded-full" style={{ background: item.color ?? CHART.other }} />
                     <p className="min-w-0 flex-1 truncate">{item.name}</p>
                     <CurrencyDisplay amount={item.value} currency={currency} className="text-sm" />
-                    <span className="w-8 shrink-0 text-right text-[11px] text-muted-foreground">{percent.toFixed(0)}%</span>
+                    <span className="money w-8 shrink-0 text-right text-ui-xs text-muted-foreground">{percent.toFixed(0)}%</span>
                   </div>
                   <Progress value={percent} />
                 </div>
@@ -267,7 +267,7 @@ export function DashboardPage() {
                   >
                     <div className="flex min-w-0 items-center justify-between gap-2 text-sm">
                       <span className="truncate">{budget.name}</span>
-                      <span className="shrink-0 text-xs text-muted-foreground">
+                      <span className="money shrink-0 text-ui-xs text-muted-foreground">
                         {formatMoney(spent, currency, { compact: true })} / {formatMoney(budget.limitAmount, currency, { compact: true })}
                       </span>
                     </div>
@@ -276,8 +276,8 @@ export function DashboardPage() {
                 )
               })}
               {overallBudget ? (
-                <p className="text-[11px] text-muted-foreground">
-                  Left <CurrencyDisplay amount={budgetRemaining} currency={currency} className="inline text-[11px]" />
+                <p className="text-ui-xs text-muted-foreground">
+                  Left <CurrencyDisplay amount={budgetRemaining} currency={currency} className="inline text-ui-xs" />
                 </p>
               ) : null}
             </div>
@@ -346,7 +346,7 @@ export function DashboardPage() {
               <div key={goal.id} className="space-y-1">
                 <div className="flex justify-between gap-3 text-sm">
                   <span className="truncate">{goal.name}</span>
-                  <span>{usagePercent(goal.currentAmount, goal.targetAmount).toFixed(0)}%</span>
+                  <span className="money">{usagePercent(goal.currentAmount, goal.targetAmount).toFixed(0)}%</span>
                 </div>
                 <Progress value={usagePercent(goal.currentAmount, goal.targetAmount)} />
               </div>

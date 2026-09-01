@@ -22,7 +22,7 @@ export function MobileSheet({
         <Drawer.Overlay className="fixed inset-0 z-[110] bg-[#08070D]/50" />
         <Drawer.Content
           className={cn(
-            'fixed inset-x-0 bottom-0 z-[110] flex max-h-[92svh] flex-col rounded-t-[1.25rem] border border-border bg-card outline-none',
+            'fixed inset-x-0 bottom-0 z-[110] flex max-h-[92svh] flex-col rounded-t-[var(--radius)] border border-border bg-card outline-none',
             'pb-[max(1rem,env(safe-area-inset-bottom))]',
           )}
         >
@@ -36,7 +36,7 @@ export function MobileSheet({
               type="button"
               aria-label="Close"
               onClick={() => onOpenChange(false)}
-              className="flex size-11 items-center justify-center rounded-[12px] text-muted-foreground"
+              className="flex size-11 items-center justify-center rounded-[var(--radius-md)] text-muted-foreground"
             >
               <X className="size-5" />
             </button>

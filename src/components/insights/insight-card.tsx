@@ -62,7 +62,7 @@ export function InsightCard({
                 </Badge>
               </div>
               <p className="mt-1 text-sm text-muted-foreground">{insight.summary}</p>
-              {insight.category ? <p className="mt-1 text-[11px] uppercase tracking-[0.12em] text-muted-foreground">{insight.category}</p> : null}
+              {insight.category ? <p className="text-label mt-1">{insight.category}</p> : null}
             </div>
           </div>
         </button>

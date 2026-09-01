@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useTheme } from 'next-themes'
 import { toast } from 'sonner'
 import { ChevronRight } from 'lucide-react'
+import { AppearancePanel } from '@/components/settings/appearance-panel'
 import { PageHeader } from '@/components/shared/page-header'
 import { CollapsibleSection } from '@/components/shared/collapsible-section'
 import { ConfirmDialog } from '@/components/shared/confirm-dialog'
@@ -20,11 +20,10 @@ import { buildSampleData } from '@/lib/data/seed'
 import { downloadBlob } from '@/lib/utils'
 import { toUserMessage } from '@/lib/data/errors'
 import { exportFilename } from '@/lib/import-export'
-import type { Profile, ThemePreference } from '@/types'
+import type { Profile } from '@/types'
 
 export function SettingsPage() {
   const { user, client, signOut, refresh } = useAuth()
-  const { setTheme } = useTheme()
   const navigate = useNavigate()
   const invalidate = useInvalidateFinance()
   const categories = useCategories()
@@ -57,29 +56,9 @@ export function SettingsPage() {
             <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
           </button>
           <div className="flex min-h-12 items-center justify-between gap-3 px-3.5">
-            <Label className="shrink-0">Appearance</Label>
-            <Select
-              value={user.theme}
-              onValueChange={(value) => {
-                const theme = value as ThemePreference
-                setTheme(theme)
-                void patch({ theme })
-              }}
-            >
-              <SelectTrigger className="h-10 w-[8.5rem] md:h-10">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="light">Light</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
-                <SelectItem value="system">System</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex min-h-12 items-center justify-between gap-3 px-3.5">
             <Label className="shrink-0">Currency</Label>
             <Select value={user.currency} onValueChange={(value) => void patch({ currency: value })}>
-              <SelectTrigger className="h-10 w-[8.5rem] md:h-10">
+              <SelectTrigger className="min-h-11 w-[8.5rem]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -94,7 +73,7 @@ export function SettingsPage() {
           <div className="flex min-h-12 items-center justify-between gap-3 px-3.5">
             <Label className="shrink-0">Date format</Label>
             <Select value={user.dateFormat} onValueChange={(value) => void patch({ dateFormat: value })}>
-              <SelectTrigger className="h-10 w-[8.5rem] md:h-10">
+              <SelectTrigger className="min-h-11 w-[8.5rem]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -108,6 +87,8 @@ export function SettingsPage() {
           </div>
         </CardContent>
       </Card>
+
+      <AppearancePanel />
 
       <Card>
         <CardContent className="divide-y divide-border p-0">

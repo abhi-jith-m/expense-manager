@@ -1,3 +1,9 @@
+export const CHART_TICK = {
+  fontSize: 11,
+  fill: 'var(--muted-foreground)',
+  fontFamily: 'var(--font-data)',
+} as const
+
 export const CHART = {
   income: 'var(--chart-income)',
   expenses: 'var(--chart-expense)',

@@ -15,7 +15,7 @@ import { buildInsights } from '@/lib/insights'
 import { categoryTotals, computeTotals, sumBy } from '@/lib/money'
 import { defaultMonthRange, previousRange } from '@/lib/dates'
 import { ChartTooltipContent } from '@/components/shared/chart-tooltip'
-import { CHART } from '@/lib/palette'
+import { CHART, CHART_TICK } from '@/lib/palette'
 import type { DateRange } from '@/types'
 
 const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
@@ -85,19 +85,19 @@ export function AnalyticsPage() {
       <Card>
         <CardContent className="grid grid-cols-2 gap-3">
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Spending</p>
+            <p className="text-label">Spending</p>
             <CurrencyDisplay amount={totals.expenses} currency={currency} className="block text-lg font-semibold" />
           </div>
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Avg daily</p>
+            <p className="text-label">Avg daily</p>
             <CurrencyDisplay amount={totals.expenses / days} currency={currency} className="block text-lg font-semibold" />
           </div>
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Savings rate</p>
+            <p className="text-label">Savings rate</p>
             <p className="money text-lg font-semibold">{totals.savingsRate.toFixed(0)}%</p>
           </div>
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Top category</p>
+            <p className="text-label">Top category</p>
             <p className="truncate text-lg font-semibold">{topCategoryId ? categoryMap[topCategoryId] : '—'}</p>
           </div>
         </CardContent>
@@ -107,8 +107,8 @@ export function AnalyticsPage() {
         <ResponsiveChart>
           <AreaChart data={trend} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-            <XAxis dataKey="label" interval="preserveStartEnd" tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
-            <YAxis width={36} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
+            <XAxis dataKey="label" interval="preserveStartEnd" tick={CHART_TICK} axisLine={false} tickLine={false} />
+            <YAxis width={36} tick={CHART_TICK} axisLine={false} tickLine={false} />
             <Tooltip cursor={{ stroke: 'var(--border)' }} content={<ChartTooltipContent currency={currency} />} />
             <Area dataKey="expenses" stroke={CHART.expenses} fill={CHART.expenses} fillOpacity={0.1} />
             <Area dataKey="income" stroke={CHART.income} fill={CHART.income} fillOpacity={0.08} />
@@ -158,7 +158,7 @@ export function AnalyticsPage() {
           <ChartCard title="Weekday spending" compact>
             <ResponsiveChart>
               <BarChart data={weekday} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-                <XAxis dataKey="label" tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="label" tick={CHART_TICK} axisLine={false} tickLine={false} />
                 <Tooltip content={<ChartTooltipContent currency={currency} />} />
                 <Bar dataKey="value" fill={CHART.info} radius={6} />
               </BarChart>
@@ -168,7 +168,7 @@ export function AnalyticsPage() {
             <ResponsiveChart>
               <BarChart data={merchants} layout="vertical" margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
                 <XAxis type="number" hide />
-                <YAxis type="category" dataKey="name" width={64} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} axisLine={false} tickLine={false} />
+                <YAxis type="category" dataKey="name" width={64} tick={CHART_TICK} axisLine={false} tickLine={false} />
                 <Tooltip content={<ChartTooltipContent currency={currency} />} />
                 <Bar dataKey="value" fill={CHART.entertainment} radius={6} />
               </BarChart>
@@ -177,7 +177,7 @@ export function AnalyticsPage() {
           <ChartCard title="Payment methods" compact>
             <ResponsiveChart>
               <BarChart data={methods} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-                <XAxis dataKey="name" tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="name" tick={CHART_TICK} axisLine={false} tickLine={false} />
                 <Tooltip content={<ChartTooltipContent currency={currency} />} />
                 <Bar dataKey="value" fill={CHART.investments} radius={6} />
               </BarChart>
@@ -186,7 +186,7 @@ export function AnalyticsPage() {
           <ChartCard title="Account spending" compact>
             <ResponsiveChart>
               <BarChart data={accountSpend} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-                <XAxis dataKey="name" tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="name" tick={CHART_TICK} axisLine={false} tickLine={false} />
                 <Tooltip content={<ChartTooltipContent currency={currency} />} />
                 <Bar dataKey="value" fill={CHART.expenses} radius={6} />
               </BarChart>

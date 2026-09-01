@@ -108,15 +108,15 @@ export function ReportsPage() {
       <Card>
         <CardContent className="grid grid-cols-3 gap-2">
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Income</p>
+            <p className="text-label">Income</p>
             <CurrencyDisplay amount={totals.income} currency={user?.currency ?? 'USD'} className="block text-base font-semibold" />
           </div>
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Expenses</p>
+            <p className="text-label">Expenses</p>
             <CurrencyDisplay amount={totals.expenses} currency={user?.currency ?? 'USD'} className="block text-base font-semibold" />
           </div>
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">Net</p>
+            <p className="text-label">Net</p>
             <CurrencyDisplay amount={totals.savings} currency={user?.currency ?? 'USD'} className="block text-base font-semibold" />
           </div>
         </CardContent>
