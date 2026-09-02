@@ -1,0 +1,5 @@
+{
+  "SUPABASE_URL": "https://your-project.supabase.co",
+  "SUPABASE_ANON_KEY": "your-anon-or-publishable-key",
+  "INSIGHTS_API_URL": "https://expense-manager-jj72.onrender.com/api"
+}

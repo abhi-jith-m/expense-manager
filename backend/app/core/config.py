@@ -30,9 +30,13 @@ class Settings(BaseSettings):
     cache_ttl_seconds: int = 300
     cors_origins: str = (
         "http://localhost:5173,http://127.0.0.1:5173,"
+        "http://localhost:8080,http://127.0.0.1:8080,"
         "https://aureum-expense-manager.vercel.app"
     )
-    cors_origin_regex: str = r"https://([a-z0-9-]+\.)*vercel\.app"
+    cors_origin_regex: str = (
+        r"https://([a-z0-9-]+\.)*vercel\.app|"
+        r"http://(localhost|127\.0\.0\.1):\d+"
+    )
 
 
 def parse_cors_origins(raw: str) -> list[str]:
