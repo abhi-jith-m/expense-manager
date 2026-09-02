@@ -19,6 +19,18 @@ export function DialogContent({
         className="fixed inset-0 z-[100] bg-[#08070D]/55 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
       />
       <DialogPrimitive.Content
+        onPointerDownOutside={(event) => {
+          const target = event.target as HTMLElement | null
+          if (target?.closest('[data-radix-select-content], [data-radix-select-viewport]')) {
+            event.preventDefault()
+          }
+        }}
+        onInteractOutside={(event) => {
+          const target = event.target as HTMLElement | null
+          if (target?.closest('[data-radix-select-content], [data-radix-select-viewport]')) {
+            event.preventDefault()
+          }
+        }}
         className={cn(
           'fixed left-1/2 top-1/2 z-[100] grid w-[min(calc(100%-2rem),32rem)] max-h-[90svh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-[var(--radius)] border border-border bg-card-elevated p-5 duration-200',
           'max-md:top-auto max-md:bottom-0 max-md:left-0 max-md:right-0 max-md:w-full max-md:max-w-none max-md:translate-x-0 max-md:translate-y-0 max-md:rounded-b-none max-md:pb-[max(1.25rem,env(safe-area-inset-bottom))]',

@@ -38,10 +38,18 @@ export function SelectContent({
         position="popper"
         collisionPadding={16}
         className={cn(
-          'z-[110] max-h-72 w-[var(--radix-select-trigger-width)] max-w-[calc(100vw-2rem)] overflow-auto rounded-xl border border-border bg-card-elevated p-1',
+          'pointer-events-auto z-[120] max-h-72 w-[var(--radix-select-trigger-width)] max-w-[calc(100vw-2rem)] overflow-auto rounded-xl border border-border bg-card-elevated p-1',
           className,
         )}
         {...props}
+        onPointerDownOutside={(event) => {
+          event.stopPropagation()
+          props.onPointerDownOutside?.(event)
+        }}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault()
+          props.onCloseAutoFocus?.(event)
+        }}
       >
         <SelectPrimitive.Viewport>{children}</SelectPrimitive.Viewport>
       </SelectPrimitive.Content>

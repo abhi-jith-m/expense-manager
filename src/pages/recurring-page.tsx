@@ -109,13 +109,13 @@ export function RecurringPage() {
               <Input type="number" step="0.01" {...form.register('amount')} aria-label="Amount" />
             </div>
             <Input placeholder="Merchant or source" {...form.register('merchant')} />
-            <Select value={form.watch('accountId')} onValueChange={(value) => form.setValue('accountId', value)}>
+            <Select value={form.watch('accountId') || undefined} onValueChange={(value) => form.setValue('accountId', value, { shouldValidate: true })}>
               <SelectTrigger><SelectValue placeholder="Account" /></SelectTrigger>
               <SelectContent>
                 {(accounts.data ?? []).map((item) => <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>)}
               </SelectContent>
             </Select>
-            <Select value={form.watch('categoryId') ?? ''} onValueChange={(value) => form.setValue('categoryId', value)}>
+            <Select value={form.watch('categoryId') || undefined} onValueChange={(value) => form.setValue('categoryId', value)}>
               <SelectTrigger><SelectValue placeholder="Category" /></SelectTrigger>
               <SelectContent>
                 {(categories.data ?? []).filter((item) => !item.parentId).map((item) => <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>)}

@@ -321,7 +321,7 @@ export function TransactionsPage() {
             onSubmit={async (values) => {
               try {
                 if (editing) {
-                  await updateTransaction.mutateAsync({ id: editing.id, patch: values })
+                  await updateTransaction.mutateAsync({ id: editing.id, patch: toCreateInput(values) })
                   toast.success('Transaction updated')
                 } else {
                   await createTransaction.mutateAsync(toCreateInput(values))

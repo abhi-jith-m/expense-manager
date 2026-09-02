@@ -250,13 +250,6 @@
     overflow-x: clip;
   }
 
-  html:has([data-app-shell]),
-  body:has([data-app-shell]),
-  body:has([data-app-shell]) #root {
-    height: 100%;
-    overflow: hidden;
-  }
-
   :focus-visible {
     @apply outline-none ring-2 ring-ring/45 ring-offset-2 ring-offset-background;
   }
